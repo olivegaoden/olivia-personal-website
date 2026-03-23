@@ -1,0 +1,323 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Google Fonts already loaded in index.html ── */
+
+/* ── PIXEL ART DESIGN SYSTEM ── */
+:root {
+  --pink:       #f7a8c4;
+  --pink-light: #fdd5e5;
+  --pink-dark:  #e879a0;
+  --lav:        #b8aee8;
+  --lav-mid:    #9b8dd4;
+  --lav-dark:   #7c6bc0;
+  --sky:        #c5d8f0;
+  --sky-light:  #d4eaf7;
+  --cream:      #fef6ff;
+  --ink:        #3a3550;
+  --ink-mid:    #6b6488;
+  --ink-light:  #9b94c0;
+}
+
+* {
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Nunito', sans-serif;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Crect width='4' height='4' fill='%239b8dd4'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%239b8dd4'/%3E%3C/svg%3E") 2 2, auto;
+}
+
+/* ── PIXEL BORDER UTILITY ── */
+.pixel-border {
+  border: 3px solid var(--lav-dark);
+  box-shadow: 3px 3px 0 var(--lav-dark);
+}
+.pixel-border-pink {
+  border: 3px solid var(--pink-dark);
+  box-shadow: 3px 3px 0 var(--pink-dark);
+}
+
+/* ── DESKTOP BACKGROUND ── */
+.desktop-bg {
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 8%,  #e8c4f4 0%, transparent 60%),
+    radial-gradient(ellipse 60% 45% at 85% 15%,  #c4d4f7 0%, transparent 55%),
+    radial-gradient(ellipse 55% 70% at 50% 90%,  #f4c4e4 0%, transparent 55%),
+    radial-gradient(ellipse 45% 40% at 88% 85%,  #c4ecf7 0%, transparent 50%),
+    linear-gradient(155deg, #e0c8f4 0%, #c8d4f4 25%, #f4c8ec 55%, #cce8f7 100%);
+}
+
+/* ── PIXEL GRID OVERLAY ── */
+.pixel-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(155,141,212,0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(155,141,212,0.10) 1px, transparent 1px);
+  background-size: 16px 16px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── WINDOW BASE ── */
+.pixel-window {
+  background: rgba(255,255,255,0.82);
+  border: 3px solid var(--lav-dark);
+  box-shadow: 4px 4px 0 var(--lav-dark);
+  backdrop-filter: blur(12px);
+}
+.pixel-window.active {
+  border-color: var(--pink-dark);
+  box-shadow: 5px 5px 0 var(--pink-dark);
+}
+
+/* ── PIXEL TITLEBAR ── */
+.pixel-titlebar {
+  background: linear-gradient(90deg, var(--lav) 0%, var(--sky) 100%);
+  border-bottom: 3px solid var(--lav-dark);
+  padding: 0 8px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  cursor: grab;
+  user-select: none;
+  gap: 6px;
+}
+.pixel-titlebar:active { cursor: grabbing; }
+.pixel-window.active .pixel-titlebar {
+  background: linear-gradient(90deg, var(--pink) 0%, var(--lav) 100%);
+}
+
+/* ── WIN CONTROL DOTS (pixel style) ── */
+.win-dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(0,0,0,0.25);
+  image-rendering: pixelated;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: filter 0.1s;
+}
+.win-dot:hover { filter: brightness(0.8); }
+.win-dot.close  { background: #ff7eb3; }
+.win-dot.min    { background: #ffd966; }
+.win-dot.expand { background: #77e8a0; }
+
+/* ── PIXEL BUTTON ── */
+.px-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 8px 14px;
+  border: 2px solid var(--lav-dark);
+  background: var(--lav);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--lav-dark);
+  transition: transform 0.08s, box-shadow 0.08s;
+  line-height: 1.5;
+}
+.px-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--lav-dark);
+}
+.px-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--lav-dark);
+}
+.px-btn.pink {
+  background: var(--pink);
+  border-color: var(--pink-dark);
+  box-shadow: 3px 3px 0 var(--pink-dark);
+}
+.px-btn.pink:hover  { box-shadow: 4px 4px 0 var(--pink-dark); }
+.px-btn.pink:active { box-shadow: 1px 1px 0 var(--pink-dark); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(184,174,232,0.15); }
+::-webkit-scrollbar-thumb {
+  background: var(--lav-mid);
+  border: 2px solid var(--lav-dark);
+  image-rendering: pixelated;
+}
+
+/* ── PIXEL CHIP / TAG ── */
+.px-chip {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  padding: 4px 8px;
+  border: 2px solid var(--lav-mid);
+  background: rgba(184,174,232,0.20);
+  color: var(--lav-dark);
+  line-height: 1.4;
+}
+.px-chip.pink {
+  border-color: var(--pink-dark);
+  background: rgba(247,168,196,0.20);
+  color: var(--pink-dark);
+}
+.px-chip.sky {
+  border-color: #5b9fd4;
+  background: rgba(197,216,240,0.25);
+  color: #3a7aaa;
+}
+
+/* ── STAT BAR ── */
+.px-bar-track {
+  height: 10px;
+  border: 2px solid var(--lav-dark);
+  background: rgba(184,174,232,0.15);
+  image-rendering: pixelated;
+}
+.px-bar-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--lav) 0px, var(--lav) 6px,
+    var(--lav-mid) 6px, var(--lav-mid) 10px
+  );
+}
+.px-bar-fill.pink {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--pink) 0px, var(--pink) 6px,
+    var(--pink-dark) 6px, var(--pink-dark) 10px
+  );
+}
+
+/* ── FLOATING ANIMATIONS ── */
+@keyframes floatY {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes starSpin {
+  0%   { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.15); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+@keyframes pulseGreen {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.85); }
+}
+@keyframes typing-bounce {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+.float-1 { animation: floatY 4s ease-in-out infinite; }
+.float-2 { animation: floatY 5s ease-in-out infinite 1s; }
+.float-3 { animation: floatY 6s ease-in-out infinite 2s; }
+.star-spin { animation: starSpin 8s linear infinite; }
+.cursor-blink { animation: blink 1s step-end infinite; }
+.pulse-green { animation: pulseGreen 2s ease-in-out infinite; }
+
+/* ── TASKBAR PIXEL TABS ── */
+.px-tab {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 5px 10px;
+  border: 2px solid var(--lav-mid);
+  border-bottom: none;
+  background: rgba(184,174,232,0.25);
+  color: var(--ink-mid);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.px-tab.active {
+  background: rgba(247,168,196,0.35);
+  border-color: var(--pink-dark);
+  color: var(--ink);
+}
+
+/* ── DESKTOP ICON ── */
+.desk-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  width: 68px;
+  transition: transform 0.1s;
+}
+.desk-icon:hover { transform: scale(1.08) translateY(-2px); }
+.desk-icon:active { transform: scale(0.95); }
+
+.desk-icon-img {
+  width: 52px;
+  height: 52px;
+  border: 3px solid rgba(255,255,255,0.9);
+  box-shadow: 3px 3px 0 var(--lav-dark);
+  background: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+.desk-icon-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 5.5px;
+  color: var(--ink);
+  text-align: center;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+  line-height: 1.5;
+}
+
+/* ── CHAT BUBBLES ── */
+.chat-bubble {
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  padding: 10px 13px;
+  border: 2px solid var(--lav-mid);
+  background: rgba(255,255,255,0.75);
+  color: var(--ink);
+  max-width: 80%;
+  box-shadow: 2px 2px 0 var(--lav-dark);
+}
+.chat-bubble.user {
+  background: rgba(247,168,196,0.25);
+  border-color: var(--pink-dark);
+  box-shadow: 2px 2px 0 var(--pink-dark);
+}
+
+/* ── RESIZE HANDLE ── */
+.resize-grip {
+  position: absolute;
+  right: 0; bottom: 0;
+  width: 14px; height: 14px;
+  cursor: se-resize;
+  background:
+    linear-gradient(135deg, transparent 50%, var(--lav-mid) 50%);
+  border-top: 2px solid var(--lav-mid);
+  border-left: 2px solid var(--lav-mid);
+}
+
+/* ── PROJECT CARD ── */
+.proj-card {
+  background: rgba(255,255,255,0.65);
+  border: 2px solid var(--lav-mid);
+  box-shadow: 3px 3px 0 var(--lav-dark);
+  padding: 14px;
+  transition: transform 0.1s, box-shadow 0.1s;
+  margin-bottom: 12px;
+}
+.proj-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--lav-dark);
+}
