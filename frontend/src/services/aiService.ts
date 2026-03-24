@@ -5,36 +5,53 @@ export interface AIResponse {
   sources: string[]
 }
 
-// Smart fallback when backend is not running
 function localFallback(question: string): AIResponse {
   const q = question.toLowerCase()
-  if (q.includes('project') || q.includes('built') || q.includes('made'))
+
+  if (q.includes('project') || q.includes('built') || q.includes('made') || q.includes('huskyflow') || q.includes('simplif'))
     return {
-      answer: "Olivia has built some great projects! 🎨\n\n**DesignFlow** — a collaborative real-time design tool using WebSockets and Canvas API.\n\n**GreenPath** — a carbon tracker with beautiful D3 visualisations (5k+ users).\n\n**Moodboard AI** — an AI moodboard generator that **won Best UX at HackNYC 2024**, built with a custom RAG pipeline.\n\n**Portfolio OS** — this very site you're looking at! A pixel-art desktop OS.",
-      sources: ['projects/designflow', 'projects/greenpath', 'projects/moodboard-ai'],
+      answer: "Olivia has built some great projects! 🛠️\n\n**HuskyFlow** — a full-stack Q&A platform (think Stack Overflow) with real-time polls via WebSockets, Google OAuth, and community spaces. Built with TypeScript, React, Node.js, and MongoDB.\n\n**Text Simplification App** — a fine-tuned T5 transformer model with a React + Flask frontend that simplifies text or audio input, with text-to-speech output.\n\n**Custom CLI Shell** — a Unix-like shell in C using Linux syscalls (fork, exec, pipe) with pipelines and I/O redirection.\n\n**Portfolio OS** — this very site!",
+      sources: ['projects/huskyflow', 'projects/text-simplification', 'projects/shell'],
     }
-  if (q.includes('skill') || q.includes('tech') || q.includes('stack') || q.includes('know'))
+
+  if (q.includes('skill') || q.includes('tech') || q.includes('stack') || q.includes('language') || q.includes('framework'))
     return {
-      answer: "Here's what Olivia works with:\n\n**Frontend:** React, TypeScript, Next.js, CSS, Tailwind, Framer Motion, D3.js\n\n**UX/Design:** Figma, design systems, accessibility (WCAG 2.1), pixel art ✨\n\n**Backend:** Node.js, Python, FastAPI, PostgreSQL\n\n**AI:** RAG pipelines, FAISS vector search, OpenAI APIs",
-      sources: ['resume.txt', 'about_me.txt'],
-    }
-  if (q.includes('experience') || q.includes('background') || q.includes('career') || q.includes('work'))
-    return {
-      answer: "Olivia has **4+ years** of professional software engineering experience. She has worked at NYC-based startups as a frontend and UX engineer, leading design system initiatives and shipping products used by thousands. She currently focuses on frontend-heavy, design-conscious engineering.",
+      answer: "Here's Olivia's tech stack:\n\n**Languages:** Java, Python, TypeScript, JavaScript, SQL, C\n\n**Frameworks:** Angular, React, React Native, PyTorch, NumPy, Pandas\n\n**Databases:** MongoDB, MySQL\n\n**Tools:** Git, Docker, Jenkins, Kafka, Postman, Palantir Foundry, Xcode, Android Studio",
       sources: ['resume.txt'],
     }
-  if (q.includes('hire') || q.includes('available') || q.includes('job') || q.includes('opportunit') || q.includes('contact'))
+
+  if (q.includes('experience') || q.includes('work') || q.includes('job') || q.includes('att') || q.includes('skillz') || q.includes('morse'))
     return {
-      answer: "Yes! Olivia is **actively looking** for new opportunities 🎉\n\nShe's especially interested in frontend-heavy, design-conscious teams. Reach her at:\n\n✉️ olivia@example.com\n💼 linkedin.com/in/olivia-dev\n🐙 github.com/olivia-dev",
+      answer: "Olivia has strong industry experience across three companies:\n\n**AT&T** (Jul 2025–Present) — Software Engineer. Built Kafka pipelines, reworked a data table used by 35k+ technicians, consolidated Angular apps.\n\n**MORSE Corp** (Jan–Jun 2024) — Python Co-op. Built ML monitoring dashboards with Palantir Foundry, maintained AI data pipelines.\n\n**Skillz** (Jan–Aug 2023) — SDK Co-op. Boosted Day-1 retention 30% and tutorial completion 40% on a 3M-MAU gaming platform.",
+      sources: ['experience/att', 'experience/morse-corp', 'experience/skillz'],
+    }
+
+  if (q.includes('education') || q.includes('school') || q.includes('university') || q.includes('degree') || q.includes('northeastern') || q.includes('gpa'))
+    return {
+      answer: "Olivia graduated from **Northeastern University** in Boston, MA in May 2025 with a **B.S. in Computer Science** and a **Minor in Graphic & Information Design**. She had a **3.9/4.0 GPA** and was on the **Dean's List**.",
+      sources: ['resume.txt'],
+    }
+
+  if (q.includes('contact') || q.includes('email') || q.includes('reach') || q.includes('hire') || q.includes('linkedin') || q.includes('github'))
+    return {
+      answer: "You can reach Olivia here:\n\n✉️ oliviagao825@gmail.com\n📞 (908) 581-2578\n💼 linkedin.com/in/olivia-gao03\n🐙 github.com/olivegaoden\n📍 New York Metropolitan Area",
       sources: ['contact.json'],
     }
-  if (q.includes('who') || q.includes('olivia') || q.includes('about') || q.includes('tell me'))
+
+  if (q.includes('interest') || q.includes('hobby') || q.includes('outside') || q.includes('fun') || q.includes('crochet') || q.includes('gaming'))
     return {
-      answer: "Olivia is a **software engineer based in NYC** who sits at the intersection of code and design. She builds interfaces that feel as good as they work — delightful, accessible, and fast. Outside of work she collects mechanical keyboards, creates pixel art, and makes excellent matcha lattes ☕",
+      answer: "Outside of engineering, Olivia enjoys **crochet**, **cozy gaming**, and **singing**! 🧶🎮🎵 Her background in Graphic & Information Design also shapes how she thinks about building software.",
       sources: ['about_me.txt'],
     }
+
+  if (q.includes('who') || q.includes('olivia') || q.includes('about') || q.includes('tell me'))
+    return {
+      answer: "Olivia Gao is a software engineer based in the New York Metropolitan Area. She graduated from **Northeastern University** in May 2025 (CS + Graphic & Information Design Minor, 3.9 GPA). She currently works at **AT&T** as a Software Engineer and has co-op experience at MORSE Corp and Skillz. She's strong across frontend, backend, and ML. ✨",
+      sources: ['about_me.txt', 'resume.txt'],
+    }
+
   return {
-    answer: "Great question! I'm Olivia's AI assistant powered by a RAG pipeline. I can answer questions about her **projects**, **skills**, **experience**, and **availability**. What would you like to know? ✨",
+    answer: "I'm Olivia's AI assistant! I can tell you about her **projects**, **work experience**, **skills**, **education**, or how to **contact** her. What would you like to know? ✨",
     sources: [],
   }
 }

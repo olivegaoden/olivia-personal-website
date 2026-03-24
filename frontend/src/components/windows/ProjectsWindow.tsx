@@ -7,7 +7,7 @@ export const ProjectsWindow: React.FC = () => (
       <div key={p.id} className="proj-card">
         <div className="flex items-start justify-between gap-2 mb-1.5">
           <h3 className="font-pixel text-[9px] text-ink leading-5">
-            {p.emoji} {p.title}
+            {p.title}
           </h3>
           {p.badge && (
             <span className="px-chip pink text-[5px] flex-shrink-0">{p.badge}</span>
@@ -21,7 +21,7 @@ export const ProjectsWindow: React.FC = () => (
         </div>
         <div className="flex gap-2">
           <a href={p.githubUrl} className="px-btn" style={{ fontSize: 7 }}>
-            🐙 GITHUB
+            GITHUB
           </a>
           {p.liveUrl && (
             <a href={p.liveUrl} className="px-btn pink" style={{ fontSize: 7 }}>

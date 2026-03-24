@@ -1,6 +1,6 @@
 """
-Olivia's knowledge base — source documents for the RAG system.
-Edit these to customise what the AI knows about you.
+Olivia Gao's knowledge base — source of truth for the RAG system.
+Edit these documents to keep the AI assistant up to date.
 """
 
 DOCUMENTS = [
@@ -8,110 +8,121 @@ DOCUMENTS = [
         "id": "bio",
         "source": "about_me.txt",
         "text": (
-            "Olivia is a software engineer based in New York City who specialises in "
-            "frontend development and UX engineering. She builds interfaces that are "
-            "beautiful, accessible, and performant. She has 4+ years of experience "
-            "working at NYC startups, building frontend systems and design systems. "
-            "She is passionate about design systems, micro-animations, pixel art, "
-            "and making complex things feel simple for users."
+            "Olivia Gao is a software engineer based in the New York Metropolitan Area. "
+            "She graduated from Northeastern University in May 2025 with a B.S. in Computer Science "
+            "and a Minor in Graphic & Information Design, with a 3.9 GPA and Dean's List honors. "
+            "She currently works as a Software Engineer at AT&T. She has experience across frontend, "
+            "backend, and machine learning, and is passionate about building clean, impactful software."
         ),
     },
     {
-        "id": "skills_frontend",
+        "id": "education",
         "source": "resume.txt",
         "text": (
-            "Olivia's frontend skills include React, TypeScript, Next.js, HTML, CSS, "
-            "Tailwind CSS, Framer Motion, D3.js, Canvas API, and WebSockets. "
-            "She is expert-level in React and TypeScript with 4 years of production use. "
-            "She has deep knowledge of CSS animations, layout systems, and responsive design."
+            "Olivia attended Northeastern University in Boston, MA, graduating May 2025. "
+            "She earned a B.S. in Computer Science with a Minor in Graphic & Information Design. "
+            "Her GPA was 3.9 out of 4.0. She was on the Dean's List."
         ),
     },
     {
-        "id": "skills_ux",
-        "source": "about_me.txt",
-        "text": (
-            "Olivia's UX and design skills include Figma, design systems architecture, "
-            "accessibility (WCAG 2.1 AA), user research, usability testing, "
-            "pixel art, and interaction design. She approaches engineering from a "
-            "design-first perspective and cares deeply about the craft of interfaces."
-        ),
-    },
-    {
-        "id": "skills_backend",
+        "id": "skills",
         "source": "resume.txt",
         "text": (
-            "Olivia's backend and AI skills include Node.js, Python, FastAPI, "
-            "PostgreSQL, REST APIs, RAG pipelines, FAISS vector databases, and OpenAI APIs. "
-            "She builds full-stack systems but her primary focus is frontend and UX."
+            "Olivia's programming languages include Java, Python, TypeScript, JavaScript, SQL, and C. "
+            "Her frameworks and libraries include Angular, React, React Native, PyTorch, NumPy, and Pandas. "
+            "Her databases include MongoDB and MySQL. "
+            "Her tools and platforms include Git, Linux, Docker, Jenkins, Kafka, Postman, "
+            "Xcode, Android Studio, and Palantir Foundry."
         ),
     },
     {
-        "id": "project_designflow",
-        "source": "projects/designflow",
+        "id": "experience_att",
+        "source": "experience/att",
         "text": (
-            "DesignFlow is a collaborative design tool Olivia built with real-time multi-user "
-            "editing via WebSockets, version history, and component libraries. "
-            "Tech stack: React, WebSockets, Canvas API, Node.js. "
-            "It supports multiplayer editing with optimistic UI updates."
+            "Olivia has been a Software Engineer at AT&T since July 2025. "
+            "She replaced client-side polling with a Kafka-based pipeline to support real-time updates "
+            "in the Angular frontend, reducing API load. "
+            "She reworked a core Angular data table used by over 35,000 AT&T technicians, "
+            "adding column resizing and improving performance for large datasets. "
+            "She also consolidated two Angular applications into a single codebase by merging shared "
+            "modules and functionality, reducing duplication and improving maintainability."
         ),
     },
     {
-        "id": "project_greenpath",
-        "source": "projects/greenpath",
+        "id": "experience_morse",
+        "source": "experience/morse-corp",
         "text": (
-            "GreenPath is a carbon footprint tracker with D3.js data visualisations. "
-            "It helps users understand their environmental impact and has 5,000+ users. "
-            "Tech stack: Next.js, D3.js, PostgreSQL, Tailwind. Open source."
+            "Olivia worked as a Python Software Engineer Co-op at MORSE Corp from January to June 2024. "
+            "She built a Python dashboard using the Palantir Foundry API to monitor machine learning model "
+            "performance, including accuracy metrics, helping engineers identify and troubleshoot "
+            "underperforming models. "
+            "She maintained data pipelines and transforms supporting the testing and evaluation of ML models. "
+            "She integrated data from computer vision systems, traditional sensors, and human-labeled data "
+            "for machine learning and AI projects."
         ),
     },
     {
-        "id": "project_moodboard",
-        "source": "projects/moodboard-ai",
+        "id": "experience_skillz",
+        "source": "experience/skillz",
         "text": (
-            "Moodboard AI is an AI-powered moodboard generator that creates cohesive visual "
-            "themes from natural language prompts. Olivia built the RAG pipeline from scratch "
-            "using FAISS and OpenAI embeddings. Won Best UX at HackNYC 2024. "
-            "Tech stack: TypeScript, FastAPI, FAISS, OpenAI API, Figma API."
+            "Olivia worked as an SDK Co-op at Skillz from January to August 2023. "
+            "Skillz is a gaming platform with 3 million monthly active users. "
+            "She increased tutorial completion by 40%, Day-1 retention by 30%, and Day-0 paid conversions "
+            "by 7% by creating a new onboarding tutorial and username generator. "
+            "She developed a cross-platform league progression system used in 6 million+ daily competitions, "
+            "improving player engagement and long-term retention. "
+            "She resolved UI and authentication bugs in single-sign-on flows across supported games."
         ),
     },
     {
-        "id": "project_portfolio",
-        "source": "projects/portfolio-os",
+        "id": "project_huskyflow",
+        "source": "projects/huskyflow",
         "text": (
-            "Portfolio OS is Olivia's interactive portfolio website built as a desktop OS UI "
-            "with draggable windows, z-index stacking, and an AI assistant powered by a RAG pipeline. "
-            "The design uses a pixel-art aesthetic with a dreamy pink/lavender palette. "
-            "Tech stack: React, TypeScript, Framer Motion, FastAPI, FAISS."
+            "HuskyFlow is a full-stack Q&A platform Olivia built, inspired by Stack Overflow. "
+            "It features community spaces, user following, and Google OAuth authentication. "
+            "She added real-time polls using WebSockets so votes update and polls expire automatically. "
+            "Tech stack: TypeScript, React, Node.js, MongoDB, WebSockets. "
+            "It has a live demo and is available on GitHub."
         ),
     },
     {
-        "id": "experience",
-        "source": "resume.txt",
+        "id": "project_text_simplification",
+        "source": "projects/text-simplification",
         "text": (
-            "Olivia has 4+ years of professional software engineering experience. "
-            "She has worked at multiple NYC-based startups as a frontend and UX engineer. "
-            "She has led design system initiatives, built real-time collaborative tools, "
-            "and shipped features used by thousands. Currently open to new opportunities."
+            "Olivia built a Text Simplification Application using Python and PyTorch. "
+            "She built a text simplification model using a custom word complexity approach and a "
+            "fine-tuned T5 transformer. She created a React + Flask app that accepts text or audio "
+            "input and returns simplified text with text-to-speech output. "
+            "Tech stack: Python, PyTorch, React, Flask."
         ),
     },
     {
-        "id": "contact_availability",
+        "id": "project_shell",
+        "source": "projects/shell",
+        "text": (
+            "Olivia implemented a Custom Command Line Shell in C. "
+            "She built a Unix-like shell using Linux syscalls including fork, exec, and pipe, "
+            "with support for command execution, pipelines, and I/O redirection. "
+            "This project demonstrates low-level systems programming skills."
+        ),
+    },
+    {
+        "id": "contact",
         "source": "contact.json",
         "text": (
-            "Olivia is actively seeking new software engineering opportunities, especially "
-            "at frontend-heavy, design-conscious teams. Available for full-time roles. "
-            "Email: olivia@example.com. LinkedIn: linkedin.com/in/olivia-dev. "
-            "GitHub: github.com/olivia-dev. Twitter: @olivia_builds."
+            "Olivia Gao can be contacted at oliviagao825@gmail.com. "
+            "She is based in the New York Metropolitan Area. "
+            "Her LinkedIn is linkedin.com/in/olivia-gao03. "
+            "Her GitHub is github.com/olivegaoden."
         ),
     },
     {
-        "id": "personality",
+        "id": "interests",
         "source": "about_me.txt",
         "text": (
-            "Olivia values craft, accessibility, and user delight. She believes great software "
-            "should feel as good as it works. Outside of work she collects mechanical keyboards, "
-            "creates pixel art, and makes excellent matcha lattes. She loves the detail work — "
-            "micro-animations, pixel-perfect layouts, and thoughtful interactions."
+            "Outside of work, Olivia enjoys crochet, cozy gaming, and singing. "
+            "She has a background in graphic and information design from her minor at Northeastern, "
+            "which informs her approach to building user-facing software."
         ),
     },
 ]

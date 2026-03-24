@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 
-export type WindowId = 'welcome' | 'about' | 'projects' | 'contact' | 'ai'
+export type WindowId = 'welcome' | 'about' | 'experience' | 'projects' | 'contact' | 'ai'
 
 export interface WindowState {
   id: WindowId
@@ -13,29 +13,45 @@ export interface WindowState {
   zIndex: number
 }
 
-const DEFAULTS: Record<WindowId, Omit<WindowState, 'zIndex' | 'isOpen' | 'isMinimized'>> = {
-  welcome:  { id: 'welcome',  x: 120, y: 55,  width: 400, height: 380 },
-  about:    { id: 'about',    x: 560, y: 55,  width: 400, height: 460 },
-  projects: { id: 'projects', x: 160, y: 65,  width: 440, height: 500 },
-  contact:  { id: 'contact',  x: 610, y: 70,  width: 360, height: 360 },
-  ai:       { id: 'ai',       x: 370, y: 55,  width: 430, height: 520 },
+const TASKBAR_H   = 36
+const STATUSBAR_H = 22
+
+const WIN_FRACTIONS: Record<WindowId, { wFrac: number; hFrac: number }> = {
+  welcome:    { wFrac: 0.38, hFrac: 0.62 },
+  about:      { wFrac: 0.42, hFrac: 0.78 },
+  experience: { wFrac: 0.42, hFrac: 0.74 },
+  projects:   { wFrac: 0.44, hFrac: 0.80 },
+  contact:    { wFrac: 0.34, hFrac: 0.60 },
+  ai:         { wFrac: 0.40, hFrac: 0.82 },
 }
 
-const initWindows = (): Record<WindowId, WindowState> => {
-  const ids: WindowId[] = ['welcome', 'about', 'projects', 'contact', 'ai']
-  return Object.fromEntries(
-    ids.map((id, i) => [id, { ...DEFAULTS[id], isOpen: id === 'welcome', isMinimized: false, zIndex: i + 1 }])
-  ) as Record<WindowId, WindowState>
+const IDS: WindowId[] = ['welcome', 'about', 'experience', 'projects', 'contact', 'ai']
+
+function makeWindowState(id: WindowId, zIndex: number, isOpen: boolean): WindowState {
+  const vw  = window.innerWidth
+  const vh  = window.innerHeight - TASKBAR_H - STATUSBAR_H
+  const { wFrac, hFrac } = WIN_FRACTIONS[id]
+  const width  = Math.round(vw * wFrac)
+  const height = Math.round(vh * hFrac)
+  const x = Math.max(0, Math.round((vw - width)  / 2))
+  const y = Math.max(0, Math.round((vh - height) / 2)) + TASKBAR_H
+  return { id, x, y, width, height, zIndex, isOpen, isMinimized: false }
 }
+
+const initWindows = (): Record<WindowId, WindowState> =>
+  Object.fromEntries(
+    IDS.map((id, i) => [id, makeWindowState(id, i + 1, id === 'welcome')])
+  ) as Record<WindowId, WindowState>
 
 export function useWindowManager() {
   const [windows, setWindows] = useState<Record<WindowId, WindowState>>(initWindows)
-  const [zTop, setZTop] = useState(10)
+  const zTopRef = useRef(10)
 
   const open = useCallback((id: WindowId) => {
-    setZTop(z => z + 1)
-    setWindows(w => ({ ...w, [id]: { ...w[id], isOpen: true, isMinimized: false, zIndex: zTop + 1 } }))
-  }, [zTop])
+    zTopRef.current += 1
+    const nextZ = zTopRef.current
+    setWindows(w => ({ ...w, [id]: makeWindowState(id, nextZ, true) }))
+  }, [])
 
   const close = useCallback((id: WindowId) => {
     setWindows(w => ({ ...w, [id]: { ...w[id], isOpen: false, isMinimized: false } }))
@@ -46,9 +62,10 @@ export function useWindowManager() {
   }, [])
 
   const focus = useCallback((id: WindowId) => {
-    setZTop(z => z + 1)
-    setWindows(w => ({ ...w, [id]: { ...w[id], zIndex: zTop + 1, isMinimized: false } }))
-  }, [zTop])
+    zTopRef.current += 1
+    const nextZ = zTopRef.current
+    setWindows(w => ({ ...w, [id]: { ...w[id], zIndex: nextZ, isMinimized: false } }))
+  }, [])
 
   const move = useCallback((id: WindowId, x: number, y: number) => {
     setWindows(w => ({ ...w, [id]: { ...w[id], x, y } }))

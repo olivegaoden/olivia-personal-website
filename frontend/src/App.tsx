@@ -3,6 +3,7 @@ import { useWindowManager, type WindowId } from './hooks/useWindowManager'
 import { Window } from './components/windows/Window'
 import { WelcomeWindow } from './components/windows/WelcomeWindow'
 import { AboutWindow } from './components/windows/AboutWindow'
+import { ExperienceWindow } from './components/windows/ExperienceWindow'
 import { ProjectsWindow } from './components/windows/ProjectsWindow'
 import { ContactWindow } from './components/windows/ContactWindow'
 import { AIWindow } from './components/windows/AIWindow'
@@ -11,20 +12,26 @@ import { DesktopIcons } from './components/DesktopIcons'
 import { DesktopBackground } from './components/DesktopBackground'
 import { Statusbar } from './components/Statusbar'
 
-const WIN_TITLES: Record<WindowId, { title: string; emoji: string; minW?: number; minH?: number }> = {
-  welcome:  { title: 'welcome.exe',   emoji: '🏠', minW: 360, minH: 340 },
-  about:    { title: 'about_me.txt',  emoji: '👩‍💻', minW: 360, minH: 380 },
-  projects: { title: 'projects/',     emoji: '📁', minW: 380, minH: 380 },
-  contact:  { title: 'contact.json',  emoji: '💌', minW: 320, minH: 300 },
-  ai:       { title: 'olivia_ai.exe', emoji: '🤖', minW: 380, minH: 440 },
+// minWidth/minHeight computed as fraction of viewport so resize never gets too small
+const vw = window.innerWidth
+const vh = window.innerHeight
+
+const WIN_TITLES: Record<WindowId, { title: string; minW?: number; minH?: number }> = {
+  welcome:    { title: 'welcome.exe',    minW: Math.round(vw * 0.25), minH: Math.round(vh * 0.35) },
+  about:      { title: 'about_me.txt',   minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.40) },
+  experience: { title: 'experience.txt', minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.38) },
+  projects:   { title: 'projects/',      minW: Math.round(vw * 0.30), minH: Math.round(vh * 0.40) },
+  contact:    { title: 'contact.json',   minW: Math.round(vw * 0.24), minH: Math.round(vh * 0.32) },
+  ai:         { title: 'olivia_ai.exe',  minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.45) },
 }
 
 const WIN_CONTENT: Record<WindowId, (open: (id: WindowId) => void) => React.ReactNode> = {
-  welcome:  (open) => <WelcomeWindow openWindow={open} />,
-  about:    ()     => <AboutWindow />,
-  projects: ()     => <ProjectsWindow />,
-  contact:  ()     => <ContactWindow />,
-  ai:       ()     => <AIWindow />,
+  welcome:    (open) => <WelcomeWindow openWindow={open} />,
+  about:      ()     => <AboutWindow />,
+  experience: ()     => <ExperienceWindow />,
+  projects:   ()     => <ProjectsWindow />,
+  contact:    ()     => <ContactWindow />,
+  ai:         ()     => <AIWindow />,
 }
 
 export default function App() {
@@ -55,7 +62,6 @@ export default function App() {
             key={id}
             id={id}
             title={meta.title}
-            emoji={meta.emoji}
             x={w.x} y={w.y}
             width={w.width} height={w.height}
             zIndex={w.zIndex}

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import type { WindowId, WindowState } from '../hooks/useWindowManager'
 
-const WIN_META: Record<WindowId, { emoji: string; label: string }> = {
-  welcome:  { emoji: '🏠', label: 'welcome.exe' },
-  about:    { emoji: '👩‍💻', label: 'about_me.txt' },
-  projects: { emoji: '📁', label: 'projects/'    },
-  contact:  { emoji: '💌', label: 'contact.json' },
-  ai:       { emoji: '🤖', label: 'olivia_ai.exe'},
+const WIN_META: Record<WindowId, { label: string }> = {
+  welcome: { label: 'welcome.exe' },
+  about: { label: 'about_me.txt' },
+  experience: { label: 'experience.txt' },
+  projects: { label: 'projects/' },
+  contact: { label: 'contact.json' },
+  ai: { label: 'olivia_ai.exe' }
 }
 
 interface Props {
@@ -64,7 +65,6 @@ export const Taskbar: React.FC<Props> = ({ windows, activeId, onTabClick, onMini
               else onTabClick(w.id)
             }}
           >
-            <span>{meta.emoji}</span>
             <span>{meta.label}</span>
           </button>
         )
