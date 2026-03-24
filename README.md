@@ -112,7 +112,7 @@ Each document is:
 npm run build   # outputs to dist/
 ```
 
-**Backend** → Railway / Render / Fly.io
+**Backend** → Render
 - Set `OPENAI_API_KEY` environment variable
 - Update `VITE_API_URL` in frontend `.env` to your deployed URL
 
