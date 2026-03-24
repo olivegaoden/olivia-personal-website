@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 
-export type WindowId = 'welcome' | 'about' | 'experience' | 'projects' | 'contact' | 'ai'
+export type WindowId = 'welcome' | 'about' | 'experience' | 'projects' | 'contact' | 'ai' | 'resume'
 
 export interface WindowState {
   id: WindowId
@@ -23,9 +23,10 @@ const WIN_FRACTIONS: Record<WindowId, { wFrac: number; hFrac: number }> = {
   projects:   { wFrac: 0.44, hFrac: 0.80 },
   contact:    { wFrac: 0.34, hFrac: 0.60 },
   ai:         { wFrac: 0.40, hFrac: 0.82 },
+  resume:     { wFrac: 0.52, hFrac: 0.88 },
 }
 
-const IDS: WindowId[] = ['welcome', 'about', 'experience', 'projects', 'contact', 'ai']
+const IDS: WindowId[] = ['welcome', 'about', 'experience', 'projects', 'contact', 'ai', 'resume']
 
 function makeWindowState(id: WindowId, zIndex: number, isOpen: boolean): WindowState {
   const vw  = window.innerWidth

@@ -59,7 +59,7 @@ class RAGPipeline:
         logger.info(f"FAISS index built — {self.index.ntotal} vectors, dim={dim}")
 
     # ── Query ─────────────────────────────────────────────────────────────
-    def query(self, question: str) -> dict[str, Any]:
+    def query(self, question: str, history: list | None = None) -> dict:
         if not self.ready:
             return {"answer": "AI backend not configured. Set OPENAI_API_KEY.", "sources": []}
 
@@ -70,25 +70,29 @@ class RAGPipeline:
         context = "\n\n".join(f"[{c['source']}]\n{c['text']}" for c in hits)
         sources = list(dict.fromkeys(c["source"] for c in hits))
 
+        system_msg = {
+            "role": "system",
+            "content": (
+                "You are a helpful AI assistant embedded in Olivia Gao's portfolio website. "
+                "Answer questions about Olivia using ONLY the provided context. "
+                "Be friendly, specific, and enthusiastic. Use **bold** for key terms. "
+                "For simple questions answer in 2-3 sentences. "
+                "For questions about experience, projects, or skills, give structured detail "
+                "with bullet points or clear sections as needed. "
+                "If the answer isn't in the context, say so honestly and suggest emailing "
+                "oliviagao825@gmail.com. Never make up information.\n\n"
+                f"Context about Olivia:\n{context}"
+            ),
+        }
+
+        prior = (history or [])[-6:]
+        messages = [system_msg, *prior, {"role": "user", "content": question}]
+
         resp = self.client.chat.completions.create(
             model=CHAT_MODEL,
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a helpful AI assistant for Olivia's portfolio website. "
-                        "Answer questions about Olivia using ONLY the provided context. "
-                        "Be warm, concise, and use a little enthusiasm. Use **bold** for emphasis. "
-                        "If not in context, say you don't have that info and suggest contacting Olivia."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": f"Context:\n{context}\n\nQuestion: {question}\n\nAnswer in 2-4 sentences.",
-                },
-            ],
+            messages=messages,
             temperature=0.4,
-            max_tokens=400,
+            max_tokens=500,
         )
 
         return {"answer": resp.choices[0].message.content.strip(), "sources": sources}

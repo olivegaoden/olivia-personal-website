@@ -13,6 +13,7 @@ const Chips = ({ items, variant = '' }: { items: string[], variant?: string }) =
 
 export const AboutWindow: React.FC = () => (
   <div className="flex flex-col gap-1">
+    <Section label="// ABOUT ME" />
     <p className="font-body text-[12px] text-ink font-semibold leading-relaxed mt-2">
       Software engineer with a background in both <strong>CS and graphic design</strong>. I've shipped features for 35k+ enterprise users at AT&T, built ML tooling at MORSE Corp, and grew engagement metrics at Skillz's 3M-MAU gaming platform.
     </p>

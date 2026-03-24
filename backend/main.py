@@ -43,6 +43,7 @@ async def startup():
 
 class QueryRequest(BaseModel):
     question: str
+    history: list[dict] = []  # [{"role": "user"|"assistant", "content": "..."}]
 
 class QueryResponse(BaseModel):
     answer: str
@@ -61,7 +62,7 @@ async def query(req: QueryRequest):
     if not rag or not rag.ready:
         raise HTTPException(503, "RAG pipeline not ready")
     try:
-        result = rag.query(req.question)
+        result = rag.query(req.question, history=req.history)
         return QueryResponse(**result)
     except Exception as e:
         logger.error(f"Query error: {e}")

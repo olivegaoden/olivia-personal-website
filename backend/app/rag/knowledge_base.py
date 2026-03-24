@@ -24,6 +24,7 @@ DOCUMENTS = [
         "text": (
             "Olivia Gao contact information: "
             "Email: oliviagao825@gmail.com. "
+            "Phone: (908) 581-2578. "
             "LinkedIn: linkedin.com/in/olivia-gao03. "
             "GitHub: github.com/olivegaoden. "
             "Location: New York Metropolitan Area. "
@@ -189,6 +190,34 @@ DOCUMENTS = [
             "or design-focused engineering teams. "
             "She is available for full-time roles in the New York Metropolitan Area. "
             "Best way to reach her: oliviagao825@gmail.com or linkedin.com/in/olivia-gao03."
+        ),
+    },
+    {
+        "id": "strengths",
+        "source": "about_me.txt",
+        "text": (
+            "Olivia Gao's professional strengths as a software engineer: "
+            "1) Passion for user experience — her first instinct when building anything is whether the design "
+            "is intuitive and frictionless. She actively finds pain points and takes the initiative to fix them herself. "
+            "2) Shipping in complex codebases — at AT&T she navigated a large existing codebase to rework a data table "
+            "used by 35,000+ technicians and consolidated two separate applications, making impactful changes without breaking things. "
+            "3) Attention to measurable outcomes — she thinks in metrics and impact: 40% increase in tutorial completion, "
+            "30% improvement in Day-1 retention, 7% lift in paid conversions at Skillz; real-time pipeline reducing API load at AT&T. "
+            "4) Independence — she is able to solve problems on her own but knows when to ask for help to avoid being blocked too long. "
+            "5) Breadth across the stack — frontend (Angular, React), backend (Kafka, Flask, FastAPI), "
+            "ML data pipelines (Palantir Foundry), and mobile (React Native)."
+        ),
+    },
+    {
+        "id": "weaknesses",
+        "source": "about_me.txt",
+        "text": (
+            "Olivia Gao's professional weaknesses and areas for growth as a software engineer: "
+            "1) Over-scoping — because she sees the full picture and cares about quality, she sometimes wants to fix "
+            "everything she notices rather than staying focused on the task at hand. "
+            "She is working on scoping work tightly and creating separate tickets for improvements she spots. "
+            "2) Public speaking and presenting to large groups — presenting to large audiences is something she finds "
+            "challenging and is actively working to improve through seeking out opportunities to present at work and practicing on her own. "
         ),
     },
 ]

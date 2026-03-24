@@ -8,6 +8,7 @@ import { ExperienceWindow } from './components/windows/ExperienceWindow'
 import { ProjectsWindow } from './components/windows/ProjectsWindow'
 import { ContactWindow } from './components/windows/ContactWindow'
 import { AIWindow } from './components/windows/AIWindow'
+import { ResumeWindow } from './components/windows/ResumeWindow'
 import { Taskbar } from './components/Taskbar'
 import { DesktopIcons } from './components/DesktopIcons'
 import { DesktopBackground } from './components/DesktopBackground'
@@ -26,6 +27,7 @@ function getWinTitles() {
     projects:   { title: 'projects/',      minW: Math.round(vw * 0.26), minH: Math.round(vh * 0.28) },
     contact:    { title: 'contact.json',   minW: Math.round(vw * 0.20), minH: Math.round(vh * 0.22) },
     ai:         { title: 'olivia_ai.exe',  minW: Math.round(vw * 0.24), minH: Math.round(vh * 0.30) },
+    resume:     { title: 'resume.pdf',     minW: Math.round(vw * 0.32), minH: Math.round(vh * 0.40) },
   } as Record<WindowId, { title: string; minW: number; minH: number }>
 }
 
@@ -36,6 +38,7 @@ const WIN_CONTENT: Record<WindowId, (open: (id: WindowId) => void) => React.Reac
   projects:   ()     => <ProjectsWindow />,
   contact:    ()     => <ContactWindow />,
   ai:         ()     => <AIWindow />,
+  resume:     ()     => <ResumeWindow />,
 }
 
 export default function App() {

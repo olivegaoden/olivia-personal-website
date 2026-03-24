@@ -46,7 +46,7 @@ html, body, #root {
   overflow-y: auto;
   overflow-x: hidden;
 }
- 
+
 /* ── PIXEL BORDER UTILITY ── */
 .pixel-border {
   border: 3px solid var(--lav-dark);
@@ -150,8 +150,6 @@ html, body, #root {
   border-color: var(--pink-dark);
   box-shadow: 3px 3px 0 var(--pink-dark);
 }
-.px-btn.pink:hover  { box-shadow: 4px 4px 0 var(--pink-dark); }
-.px-btn.pink:active { box-shadow: 1px 1px 0 var(--pink-dark); }
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 8px; }
@@ -300,7 +298,9 @@ html, body, #root {
   border: 2px solid var(--lav-mid);
   background: rgba(255,255,255,0.75);
   color: var(--ink);
-  max-width: 80%;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
   box-shadow: 2px 2px 0 var(--lav-dark);
 }
 .chat-bubble.user {

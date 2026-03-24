@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { PROJECTS, EXPERIENCE, SKILLS_LANGUAGES, SKILLS_FRONTEND, SKILLS_BACKEND, SKILLS_AI, SKILLS_DESIGN, PROFICIENCY } from '../data/portfolio'
-import { queryAI } from '../services/aiService'
+import { queryAI, type ConversationMessage } from '../services/aiService'
 
 // ── tiny pixel section header ───────────────────────────────────────────────
 const SectionHeader = ({ children }: { children: React.ReactNode }) => (
@@ -21,11 +21,12 @@ const NAV_ITEMS = [
   { id: 'experience', label: 'Experience' },
   { id: 'projects',   label: 'Projects'   },
   { id: 'contact',    label: 'Contact'    },
+  { id: 'resume',     label: 'Resume'     },
   { id: 'ai',         label: 'AI Chat'    },
 ]
 
 // ── AI chat (simplified inline version) ─────────────────────────────────────
-interface ChatMsg { role: 'user' | 'ai'; text: string; sources?: string[] }
+interface ChatMsg { role: 'user' | 'ai'; text: string; model?: string }
 
 const SUGGESTIONS = [
   "What projects has she built?",
@@ -44,6 +45,7 @@ const MobileAIChat: React.FC = () => {
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const historyRef = useRef<ConversationMessage[]>([])
 
   const send = async (q: string) => {
     const question = q.trim()
@@ -51,9 +53,14 @@ const MobileAIChat: React.FC = () => {
     setInput('')
     setMessages(p => [...p, { role: 'user', text: question }])
     setLoading(true)
-    const result = await queryAI(question)
+    const result = await queryAI(question, historyRef.current)
     setLoading(false)
-    setMessages(p => [...p, { role: 'ai', text: result.answer, sources: result.sources }])
+    historyRef.current = [
+      ...historyRef.current,
+      { role: 'user', content: question },
+      { role: 'assistant', content: result.answer },
+    ]
+    setMessages(p => [...p, { role: 'ai', text: result.answer, model: result.model }])
   }
 
   return (
@@ -78,14 +85,20 @@ const MobileAIChat: React.FC = () => {
           <div key={i} className={`flex gap-2 items-start ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
             <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-sm"
               style={{ border: '2px solid', borderColor: m.role === 'ai' ? '#7c6bc0' : '#e879a0', background: m.role === 'ai' ? 'rgba(184,174,232,0.3)' : 'rgba(247,168,196,0.3)' }}>
+              {m.role === 'ai' ? '🤖' : '🧑'}
             </div>
-            <div className={`chat-bubble ${m.role === 'user' ? 'user' : ''}`} style={{ maxWidth: '82%' }}
-              dangerouslySetInnerHTML={{ __html: renderMd(m.text) }} />
+            <div className="flex flex-col gap-1" style={{ maxWidth: '82%' }}>
+              <div className={`chat-bubble ${m.role === 'user' ? 'user' : ''}`}
+                dangerouslySetInnerHTML={{ __html: renderMd(m.text) }} />
+              {m.model && (
+                <span style={{ fontSize: 8, color: '#9b94c0', fontFamily: 'monospace' }}>{m.model}</span>
+              )}
+            </div>
           </div>
         ))}
         {loading && (
           <div className="flex gap-2 items-start">
-            <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-sm" style={{ border: '2px solid #7c6bc0', background: 'rgba(184,174,232,0.3)' }}></div>
+            <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-sm" style={{ border: '2px solid #7c6bc0', background: 'rgba(184,174,232,0.3)' }}>🤖</div>
             <div className="chat-bubble">
               <div style={{ display: 'flex', gap: 4 }}>
                 {[0,1,2].map(i => <div key={i} style={{ width: 6, height: 6, background: '#b8aee8', border: '1px solid #7c6bc0', animation: `typing-bounce 1.2s ease-in-out infinite`, animationDelay: `${i*0.2}s` }} />)}
@@ -121,7 +134,7 @@ export const MobileView: React.FC = () => {
   }
 
   return (
-    <div className="desktop-bg" style={{ minHeight: '100vh', position: 'relative' }}>
+    <div className="desktop-bg mobile-root" style={{ minHeight: '100vh', position: 'relative' }}>
       {/* pixel grid bg */}
       <div style={{
         position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
@@ -193,10 +206,10 @@ export const MobileView: React.FC = () => {
             </p>
             <p className="font-body font-semibold text-ink-mid mt-2" style={{ fontSize: 12, lineHeight: 1.7 }}>
               Currently a Software Engineer at <strong>AT&amp;T</strong>. Previously co-ops at
-              MORSE Corp and Skillz. 
+              MORSE Corp and Skillz.
             </p>
             <p className="font-body font-semibold text-ink-mid mt-2" style={{ fontSize: 12, lineHeight: 1.7 }}>
-              Interests include: crochet, cozy gaming, singing
+              Interests include: crochet, cozy gaming, and singing
             </p>
           </div>
 
@@ -242,7 +255,6 @@ export const MobileView: React.FC = () => {
           {EXPERIENCE.map(exp => (
             <details key={exp.company} className="mb-3" style={{ border: '2px solid #9b8dd4', background: 'rgba(255,255,255,0.6)', boxShadow: '3px 3px 0 #7c6bc0' }}>
               <summary className="flex items-center gap-3 px-3 py-2.5 cursor-pointer list-none">
-                <span style={{ fontSize: 20 }}></span>
                 <div className="flex-1 min-w-0">
                   <p className="font-pixel text-ink" style={{ fontSize: 8, lineHeight: 2 }}>{exp.company}</p>
                   <p className="font-mono text-ink-mid" style={{ fontSize: 14 }}>{exp.role}</p>
@@ -268,7 +280,6 @@ export const MobileView: React.FC = () => {
             <div key={p.id} className="proj-card mb-3">
               <div className="flex items-start justify-between gap-2 mb-1.5">
                 <h3 className="font-pixel text-ink" style={{ fontSize: 9, lineHeight: 2 }}>{p.title}</h3>
-                {p.badge && <span className="px-chip pink" style={{ fontSize: 5 }}>{p.badge}</span>}
               </div>
               <p className="font-body font-semibold text-ink-mid mb-2" style={{ fontSize: 12, lineHeight: 1.6 }}>{p.description}</p>
               <div className="flex flex-wrap gap-1.5 mb-3">{p.tech.map(t => <span key={t} className="px-chip">{t}</span>)}</div>
@@ -291,12 +302,10 @@ export const MobileView: React.FC = () => {
             { label: 'Email',    value: 'oliviagao825@gmail.com',        href: 'mailto:oliviagao825@gmail.com'  },
             { label: 'LinkedIn', value: 'linkedin.com/in/olivia-gao03',  href: 'https://www.linkedin.com/in/olivia-gao03' },
             { label: 'GitHub',   value: 'github.com/olivegaoden',        href: 'https://github.com/olivegaoden' },
-            { label: 'Phone',    value: '(908) 581-2578',                href: 'tel:9085812578'                 },
           ].map(l => (
             <a key={l.label} href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
               className="flex items-center gap-3 mb-2 no-underline"
               style={{ border: '2px solid #9b8dd4', background: 'rgba(255,255,255,0.6)', boxShadow: '3px 3px 0 #7c6bc0', padding: '11px 13px' }}>
-              <span style={{ fontSize: 22, flexShrink: 0 }}></span>
               <div className="flex flex-col min-w-0 flex-1">
                 <span className="font-pixel text-ink" style={{ fontSize: 7 }}>{l.label}</span>
                 <span className="font-mono text-ink-mid" style={{ fontSize: 15, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{l.value}</span>
@@ -304,6 +313,31 @@ export const MobileView: React.FC = () => {
               <span className="font-pixel text-ink-light" style={{ fontSize: 10 }}>↗</span>
             </a>
           ))}
+        </section>
+
+        {/* RESUME */}
+        <section id="mobile-resume">
+          <SectionHeader>// RESUME</SectionHeader>
+          <div style={{ background: 'rgba(255,255,255,0.7)', border: '2px solid #9b8dd4', boxShadow: '3px 3px 0 #7c6bc0', overflow: 'hidden' }}>
+            {/* toolbar */}
+            <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '2px solid rgba(184,174,232,0.3)' }}>
+              <p className="font-pixel text-ink" style={{ fontSize: 7 }}>OLIVIA GAO — RESUME</p>
+              <a
+                href="/resume.pdf"
+                download="Olivia_Gao_Resume.pdf"
+                className="px-btn pink"
+                style={{ textDecoration: 'none', fontSize: 6 }}
+              >
+                ⬇ Download
+              </a>
+            </div>
+            {/* PDF embed — tall enough to show full resume on mobile */}
+            <iframe
+              src="/resume.pdf#toolbar=0&navpanes=0&scrollbar=1"
+              style={{ width: '100%', height: 500, border: 'none', display: 'block' }}
+              title="Olivia Gao Resume"
+            />
+          </div>
         </section>
 
         {/* AI CHAT */}
@@ -317,7 +351,7 @@ export const MobileView: React.FC = () => {
         </section>
 
         <div className="text-center pb-6">
-          <p className="font-mono text-ink-mid" style={{ fontSize: 16 }}>✨ Made by Olivia</p>
+          <p className="font-mono text-ink-mid" style={{ fontSize: 16 }}>✨ Made with love &amp; pixels by Olivia</p>
         </div>
       </div>
     </div>

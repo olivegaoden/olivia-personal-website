@@ -7,7 +7,8 @@ const WIN_META: Record<WindowId, { label: string }> = {
   experience: { label: 'experience.txt' },
   projects: { label: 'projects/' },
   contact: { label: 'contact.json' },
-  ai: { label: 'olivia_ai.exe' }
+  resume: { label: 'resume.pdf' },
+  ai: { label: 'olivia_ai.exe' },
 }
 
 interface Props {

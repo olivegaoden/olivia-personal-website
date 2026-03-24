@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { queryAI } from '../../services/aiService'
+import { queryAI, type ConversationMessage } from '../../services/aiService'
 
 interface Message {
   id: string
   role: 'user' | 'ai'
   text: string
-  sources?: string[]
-  sourcesOpen?: boolean
+  model?: string
 }
 
 const SUGGESTIONS = [
@@ -16,7 +15,6 @@ const SUGGESTIONS = [
   'Is she available to hire?',
 ]
 
-// Render **bold** markdown simply
 const renderText = (text: string) => {
   const parts = text.split(/(\*\*.*?\*\*)/g)
   return parts.map((p, i) =>
@@ -54,6 +52,7 @@ export const AIWindow: React.FC = () => {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const historyRef = useRef<ConversationMessage[]>([])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -68,21 +67,21 @@ export const AIWindow: React.FC = () => {
     setMessages(m => [...m, userMsg])
     setLoading(true)
 
-    const res = await queryAI(q)
+    const res = await queryAI(q, historyRef.current)
     setLoading(false)
 
-    const aiMsg: Message = {
+    historyRef.current = [
+      ...historyRef.current,
+      { role: 'user', content: q },
+      { role: 'assistant', content: res.answer },
+    ]
+
+    setMessages(m => [...m, {
       id: (Date.now() + 1).toString(),
       role: 'ai',
       text: res.answer,
-      sources: res.sources,
-      sourcesOpen: false,
-    }
-    setMessages(m => [...m, aiMsg])
-  }
-
-  const toggleSources = (id: string) => {
-    setMessages(m => m.map(msg => msg.id === id ? { ...msg, sourcesOpen: !msg.sourcesOpen } : msg))
+      model: res.model,
+    }])
   }
 
   return (
@@ -93,7 +92,7 @@ export const AIWindow: React.FC = () => {
         style={{ borderBottom: '2px solid rgba(184,174,232,0.4)', background: 'rgba(255,255,255,0.3)' }}
       >
         <p className="font-pixel text-[8px] text-ink">ASK ME ANYTHING ABOUT OLIVIA</p>
-        <p className="font-mono text-[15px] text-ink-mid mt-0.5">AI-powered · RAG pipeline · Real resume data</p>
+        <p className="font-mono text-[15px] text-ink-mid mt-0.5">AI-powered · context-aware · real resume data</p>
       </div>
 
       {/* suggested questions */}
@@ -121,8 +120,7 @@ export const AIWindow: React.FC = () => {
       {/* messages */}
       <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3">
         {messages.map(msg => (
-          <div key={msg.id} className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse justify-start' : ''}`}>
-            {/* avatar */}
+          <div key={msg.id} className={`flex gap-2 min-w-0 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
             <div
               className="w-8 h-8 flex items-center justify-center flex-shrink-0 text-base"
               style={{
@@ -137,32 +135,19 @@ export const AIWindow: React.FC = () => {
               {msg.role === 'ai' ? '🤖' : '🧑'}
             </div>
 
-            <div className={`flex flex-col gap-1 max-w-[78%] ${msg.role === 'user' ? 'items-end' : ''}`}>
+            <div className={`flex flex-col gap-1 min-w-0 max-w-[78%] ${msg.role === 'user' ? 'items-end' : ''}`}>
               <div className={`chat-bubble ${msg.role === 'user' ? 'user' : ''}`}>
                 <p className="whitespace-pre-wrap leading-relaxed">
                   {renderText(msg.text)}
                 </p>
               </div>
-
-              {/* sources */}
-              {msg.sources && msg.sources.length > 0 && (
-                <div>
-                  <button
-                    className="font-pixel text-[6px] text-lav-dark flex items-center gap-1 px-2 py-1"
-                    style={{ border: '1px solid #9b8dd4', background: 'rgba(184,174,232,0.15)' }}
-                    onClick={() => toggleSources(msg.id)}
-                  >
-                    📎 SOURCES {msg.sourcesOpen ? '▴' : '▾'}
-                  </button>
-                  {msg.sourcesOpen && (
-                    <div
-                      className="font-mono text-[14px] text-ink-mid px-2 py-1.5 mt-1"
-                      style={{ borderLeft: '3px solid #b8aee8', background: 'rgba(184,174,232,0.1)' }}
-                    >
-                      {msg.sources.map(s => <div key={s}>· {s}</div>)}
-                    </div>
-                  )}
-                </div>
+              {msg.model && (
+                <span
+                  className="font-pixel text-[5px] text-ink-light px-1.5 py-0.5 self-start"
+                  style={{ border: '1px solid rgba(155,141,212,0.3)', background: 'rgba(255,255,255,0.4)' }}
+                >
+                  {msg.model}
+                </span>
               )}
             </div>
           </div>
@@ -180,9 +165,7 @@ export const AIWindow: React.FC = () => {
             >
               🤖
             </div>
-            <div className="chat-bubble">
-              <TypingDots />
-            </div>
+            <div className="chat-bubble"><TypingDots /></div>
           </div>
         )}
         <div ref={bottomRef} />

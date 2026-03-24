@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React from 'react'
 import type { WindowId } from '../hooks/useWindowManager'
 import { useViewport } from '../hooks/useViewport'
 
@@ -61,6 +61,18 @@ const DEFAULT_ICONS: Record<WindowId, React.FC<{ size: number }>> = {
       <rect x={2} y={10} width={11} height={1} fill="#9b8dd4"/>
     </svg>
   ),
+  resume: ({ size }) => (
+    <svg viewBox="0 0 16 16" width={size} height={size} xmlns="http://www.w3.org/2000/svg">
+      <rect x={2} y={1} width={10} height={14} fill="#fef6ff"/>
+      <rect x={2} y={1} width={10} height={14} fill="none" stroke="#e879a0" strokeWidth={1.5}/>
+      <rect x={9} y={1} width={3}  height={3}  fill="#fdd5e5"/>
+      <rect x={9} y={1} width={3}  height={3}  fill="none" stroke="#e879a0" strokeWidth={1}/>
+      <rect x={4} y={6} width={6}  height={1}  fill="#9b8dd4"/>
+      <rect x={4} y={8} width={7}  height={1}  fill="#b8aee8"/>
+      <rect x={4} y={10} width={5} height={1}  fill="#b8aee8"/>
+      <rect x={4} y={12} width={6} height={1}  fill="#b8aee8"/>
+    </svg>
+  ),
   ai: ({ size }) => (
     <svg viewBox="0 0 16 16" width={size} height={size} xmlns="http://www.w3.org/2000/svg">
       <rect x={3} y={2} width={10} height={10} fill="#9b8dd4"/>
@@ -81,57 +93,20 @@ const ICON_META: { id: WindowId; label: string }[] = [
   { id: 'experience', label: 'Experience'   },
   { id: 'projects',   label: 'Projects'     },
   { id: 'contact',    label: 'Contact'      },
+  { id: 'resume',     label: 'Resume'       },
   { id: 'ai',         label: 'AI Assistant' },
 ]
-
-const STORAGE_KEY = 'olivia-custom-icons'
-
-function loadSaved(): Record<string, string> {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') } catch { return {} }
-}
-function saveIcon(id: string, dataUrl: string) {
-  const all = loadSaved(); all[id] = dataUrl
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
-}
-function removeIcon(id: string) {
-  const all = loadSaved(); delete all[id]
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
-}
 
 interface Props { onOpen: (id: WindowId) => void }
 
 export const DesktopIcons: React.FC<Props> = ({ onOpen }) => {
-  const { height: vpHeight } = useViewport()   // re-render on resize
-  const [customIcons, setCustomIcons] = useState<Record<string, string>>(loadSaved)
-  const [editMode, setEditMode] = useState(false)
-  const fileRefs = useRef<Record<string, HTMLInputElement | null>>({})
+  const { height: vpHeight } = useViewport()
 
-  // Persist on change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(customIcons))
-  }, [customIcons])
-
-  const handleFile = (id: string, file: File) => {
-    if (!file.type.startsWith('image/')) return
-    const reader = new FileReader()
-    reader.onload = e => {
-      const dataUrl = e.target?.result as string
-      setCustomIcons(prev => { const n = { ...prev, [id]: dataUrl }; saveIcon(id, dataUrl); return n })
-    }
-    reader.readAsDataURL(file)
-  }
-
-
-  // Icon slot height at full size: 52px img + ~14px label + 10px gap = 76px
   const SLOT_H     = 76
-  const EDIT_BTN_H = 40
+  const EDIT_BTN_H = 0
   const availH     = Math.max(SLOT_H, vpHeight - 44 - 22 - EDIT_BTN_H - 8)
-  // How many icons fit in one full column
   const perCol     = Math.max(1, Math.floor(availH / SLOT_H))
-  // How many columns we need
   const cols       = Math.ceil(ICON_META.length / perCol)
-  
-  const gap        = 10
 
   return (
     <div className="absolute left-4 z-10" style={{ top: 44 }}>
@@ -141,68 +116,26 @@ export const DesktopIcons: React.FC<Props> = ({ onOpen }) => {
           gridTemplateColumns: `repeat(${cols}, 68px)`,
           gridTemplateRows: `repeat(${perCol}, auto)`,
           gridAutoFlow: 'column',
-          gap,
+          gap: 10,
         }}
       >
         {ICON_META.map(({ id, label }) => {
-          const DefaultIcon = DEFAULT_ICONS[id]
-          const customSrc   = customIcons[id]
-
+          const Icon = DEFAULT_ICONS[id]
           return (
             <div
               key={id}
-              className="desk-icon group relative"
-              
-              onClick={() => !editMode && onOpen(id)}
-              title={editMode ? `Click to change ${label} icon` : `Double-click to open ${label}`}
+              className="desk-icon"
+              onClick={() => onOpen(id)}
+              title={`Click to open ${label}`}
             >
-              <div
-                className="desk-icon-img relative"
-                onClick={() => editMode && fileRefs.current[id]?.click()}
-                style={{ width: 52, height: 52, cursor: editMode ? 'pointer' : undefined }}
-              >
-                {customSrc
-                  ? <img src={customSrc} alt={label} style={{ width: 32, height: 32, imageRendering: 'pixelated', objectFit: 'contain' }} />
-                  : <DefaultIcon size={32} />
-                }
-                {editMode && (
-                  <div
-                    className="absolute inset-0 flex items-center justify-center text-[9px] font-pixel"
-                    style={{ background: 'rgba(255,255,255,0.75)', color: '#7c6bc0', border: '2px dashed #9b8dd4' }}
-                  >
-                    {customSrc ? '↺' : '+'}
-                  </div>
-                )}
-                {editMode && customSrc && (
-                  <button
-                    className="absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center font-pixel text-[7px] text-white"
-                    style={{ background: '#e879a0', border: '1px solid #7c6bc0', zIndex: 2 }}
-                    onClick={e => { e.stopPropagation(); setCustomIcons(p => { const n={...p}; delete n[id]; removeIcon(id); return n }) }}
-                  >
-                    ×
-                  </button>
-                )}
+              <div className="desk-icon-img">
+                <Icon size={32} />
               </div>
               <div className="desk-icon-label">{label}</div>
-              <input
-                type="file" accept="image/*"
-                style={{ display: 'none' }}
-                ref={el => fileRefs.current[id] = el}
-                onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(id, f); e.target.value = '' }}
-              />
             </div>
           )
         })}
       </div>
-
-      <button
-        className="px-btn mt-2"
-        style={{ fontSize: 6, padding: '5px 8px', opacity: editMode ? 1 : 0.65 }}
-        onClick={() => setEditMode(v => !v)}
-        title="Toggle icon edit mode"
-      >
-        {editMode ? '✓ DONE' : '✎ ICONS'}
-      </button>
     </div>
   )
 }
