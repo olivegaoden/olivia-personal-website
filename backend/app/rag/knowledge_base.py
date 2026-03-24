@@ -1,6 +1,6 @@
 """
 Olivia Gao's knowledge base — source of truth for the RAG system.
-Edit these documents to keep the AI assistant up to date.
+Chunks are deliberately small and specific so retrieval is precise.
 """
 
 DOCUMENTS = [
@@ -9,120 +9,186 @@ DOCUMENTS = [
         "source": "about_me.txt",
         "text": (
             "Olivia Gao is a software engineer based in the New York Metropolitan Area. "
-            "She graduated from Northeastern University in May 2025 with a B.S. in Computer Science "
-            "and a Minor in Graphic & Information Design, with a 3.9 GPA and Dean's List honors. "
-            "She currently works as a Software Engineer at AT&T. She has experience across frontend, "
-            "backend, and machine learning, and is passionate about building clean, impactful software."
-        ),
-    },
-    {
-        "id": "education",
-        "source": "resume.txt",
-        "text": (
-            "Olivia attended Northeastern University in Boston, MA, graduating May 2025. "
-            "She earned a B.S. in Computer Science with a Minor in Graphic & Information Design. "
-            "Her GPA was 3.9 out of 4.0. She was on the Dean's List."
-        ),
-    },
-    {
-        "id": "skills",
-        "source": "resume.txt",
-        "text": (
-            "Olivia's programming languages include Java, Python, TypeScript, JavaScript, SQL, and C. "
-            "Her frameworks and libraries include Angular, React, React Native, PyTorch, NumPy, and Pandas. "
-            "Her databases include MongoDB and MySQL. "
-            "Her tools and platforms include Git, Linux, Docker, Jenkins, Kafka, Postman, "
-            "Xcode, Android Studio, and Palantir Foundry."
-        ),
-    },
-    {
-        "id": "experience_att",
-        "source": "experience/att",
-        "text": (
-            "Olivia has been a Software Engineer at AT&T since July 2025. "
-            "She replaced client-side polling with a Kafka-based pipeline to support real-time updates "
-            "in the Angular frontend, reducing API load. "
-            "She reworked a core Angular data table used by over 35,000 AT&T technicians, "
-            "adding column resizing and improving performance for large datasets. "
-            "She also consolidated two Angular applications into a single codebase by merging shared "
-            "modules and functionality, reducing duplication and improving maintainability."
-        ),
-    },
-    {
-        "id": "experience_morse",
-        "source": "experience/morse-corp",
-        "text": (
-            "Olivia worked as a Python Software Engineer Co-op at MORSE Corp from January to June 2024. "
-            "She built a Python dashboard using the Palantir Foundry API to monitor machine learning model "
-            "performance, including accuracy metrics, helping engineers identify and troubleshoot "
-            "underperforming models. "
-            "She maintained data pipelines and transforms supporting the testing and evaluation of ML models. "
-            "She integrated data from computer vision systems, traditional sensors, and human-labeled data "
-            "for machine learning and AI projects."
-        ),
-    },
-    {
-        "id": "experience_skillz",
-        "source": "experience/skillz",
-        "text": (
-            "Olivia worked as an SDK Co-op at Skillz from January to August 2023. "
-            "Skillz is a gaming platform with 3 million monthly active users. "
-            "She increased tutorial completion by 40%, Day-1 retention by 30%, and Day-0 paid conversions "
-            "by 7% by creating a new onboarding tutorial and username generator. "
-            "She developed a cross-platform league progression system used in 6 million+ daily competitions, "
-            "improving player engagement and long-term retention. "
-            "She resolved UI and authentication bugs in single-sign-on flows across supported games."
-        ),
-    },
-    {
-        "id": "project_huskyflow",
-        "source": "projects/huskyflow",
-        "text": (
-            "HuskyFlow is a full-stack Q&A platform Olivia built, inspired by Stack Overflow. "
-            "It features community spaces, user following, and Google OAuth authentication. "
-            "She added real-time polls using WebSockets so votes update and polls expire automatically. "
-            "Tech stack: TypeScript, React, Node.js, MongoDB, WebSockets. "
-            "It has a live demo and is available on GitHub."
-        ),
-    },
-    {
-        "id": "project_text_simplification",
-        "source": "projects/text-simplification",
-        "text": (
-            "Olivia built a Text Simplification Application using Python and PyTorch. "
-            "She built a text simplification model using a custom word complexity approach and a "
-            "fine-tuned T5 transformer. She created a React + Flask app that accepts text or audio "
-            "input and returns simplified text with text-to-speech output. "
-            "Tech stack: Python, PyTorch, React, Flask."
-        ),
-    },
-    {
-        "id": "project_shell",
-        "source": "projects/shell",
-        "text": (
-            "Olivia implemented a Custom Command Line Shell in C. "
-            "She built a Unix-like shell using Linux syscalls including fork, exec, and pipe, "
-            "with support for command execution, pipelines, and I/O redirection. "
-            "This project demonstrates low-level systems programming skills."
+            "She graduated from Northeastern University in Boston, MA in May 2025 with a "
+            "B.S. in Computer Science and a Minor in Graphic and Information Design. "
+            "Her GPA was 3.9/4.0 and she was on the Dean's List throughout. "
+            "She currently works as a Software Engineer at AT&T. "
+            "She has strong experience in frontend engineering, full-stack development, "
+            "and ML data pipelines. She cares deeply about building polished, "
+            "user-facing products at the intersection of engineering and design."
         ),
     },
     {
         "id": "contact",
         "source": "contact.json",
         "text": (
-            "Olivia Gao can be contacted at oliviagao825@gmail.com. "
-            "She is based in the New York Metropolitan Area. "
-            "Her LinkedIn is linkedin.com/in/olivia-gao03. "
-            "Her GitHub is github.com/olivegaoden."
+            "Olivia Gao contact information: "
+            "Email: oliviagao825@gmail.com. "
+            "LinkedIn: linkedin.com/in/olivia-gao03. "
+            "GitHub: github.com/olivegaoden. "
+            "Location: New York Metropolitan Area. "
+            "She is open to new full-time opportunities."
         ),
     },
     {
-        "id": "interests",
+        "id": "education",
+        "source": "resume.txt",
+        "text": (
+            "Olivia Gao attended Northeastern University in Boston, MA. "
+            "She earned a Bachelor of Science in Computer Science "
+            "with a Minor in Graphic and Information Design, graduating in May 2025. "
+            "GPA: 3.9 out of 4.0. Dean's List every semester. "
+            "The design minor gives her a strong foundation in visual thinking, "
+            "information hierarchy, and user experience alongside her CS degree."
+        ),
+    },
+    {
+        "id": "skills_languages",
+        "source": "resume.txt",
+        "text": (
+            "Olivia Gao's programming languages: Java, Python, TypeScript, JavaScript, SQL, C. "
+            "She is most proficient in TypeScript, JavaScript, and Python with 2+ years each in production. "
+            "She also has strong C skills from systems programming coursework."
+        ),
+    },
+    {
+        "id": "skills_frontend",
+        "source": "resume.txt",
+        "text": (
+            "Olivia Gao's frontend and mobile frameworks: Angular, React, React Native. "
+            "She has built production Angular applications at AT&T used by tens of thousands of users. "
+            "She has built React applications for personal projects and co-ops. "
+            "She has mobile development experience with React Native, Xcode for iOS, and Android Studio."
+        ),
+    },
+    {
+        "id": "skills_backend",
+        "source": "resume.txt",
+        "text": (
+            "Olivia Gao's backend and infrastructure skills: Node.js, Flask, FastAPI, "
+            "Docker, Jenkins, Kafka, Git, Linux, Postman. "
+            "She built a Kafka-based real-time event pipeline at AT&T. "
+            "She has experience with CI/CD using Jenkins and containerization with Docker."
+        ),
+    },
+    {
+        "id": "skills_data",
+        "source": "resume.txt",
+        "text": (
+            "Olivia Gao's data and AI/ML skills: PyTorch, NumPy, Pandas, Palantir Foundry. "
+            "She maintained ML data pipelines and built monitoring dashboards for model performance at MORSE Corp. "
+            "She fine-tuned a T5 transformer model for NLP in her text simplification project."
+        ),
+    },
+    {
+        "id": "skills_databases",
+        "source": "resume.txt",
+        "text": (
+            "Olivia Gao's database experience: MongoDB and MySQL. "
+            "She used MongoDB for HuskyFlow's full-stack Q&A platform. "
+            "She has experience with SQL and relational database design."
+        ),
+    },
+    {
+        "id": "experience_att",
+        "source": "resume.txt",
+        "text": (
+            "Olivia Gao works as a Software Engineer at AT&T starting July 2025 (current role). "
+            "Key contributions: "
+            "1) Replaced client-side polling with a Kafka-based event pipeline for real-time Angular frontend updates, reducing API load. "
+            "2) Reworked a core Angular data table used daily by 35,000+ AT&T field technicians — added column resizing and improved rendering performance for large datasets. "
+            "3) Consolidated two separate Angular applications into a single unified codebase by merging shared modules, reducing code duplication and improving maintainability. "
+            "Technologies: Angular, TypeScript, Kafka, REST APIs."
+        ),
+    },
+    {
+        "id": "experience_morse",
+        "source": "resume.txt",
+        "text": (
+            "Olivia Gao worked as a Python Software Engineer Co-op at MORSE Corp from January 2024 to June 2024. "
+            "Key contributions: "
+            "1) Built a Python dashboard using the Palantir Foundry API to monitor ML model performance metrics including accuracy, precision, and recall — helping engineers identify and debug underperforming models. "
+            "2) Maintained data transformation pipelines supporting testing and evaluation of machine learning models. "
+            "3) Integrated heterogeneous data sources: computer vision outputs, traditional sensors, and human-labeled ground truth for AI training workflows. "
+            "Technologies: Python, Palantir Foundry, data pipelines."
+        ),
+    },
+    {
+        "id": "experience_skillz",
+        "source": "resume.txt",
+        "text": (
+            "Olivia Gao worked as an SDK Co-op at Skillz from January 2023 to August 2023. "
+            "Skillz is a real-money gaming platform with 3 million monthly active users. "
+            "Key contributions: "
+            "1) Increased tutorial completion by 40%, Day-1 retention by 30%, and Day-0 paid conversions by 7% by designing and building a new player onboarding tutorial and username generator. "
+            "2) Developed a cross-platform league progression system integrated into 6 million+ daily competitions, improving long-term player engagement. "
+            "3) Resolved UI and authentication bugs in SSO flows across supported games. "
+            "Technologies: React Native, iOS (Xcode), Android Studio, SSO/OAuth."
+        ),
+    },
+    {
+        "id": "project_huskyflow",
+        "source": "projects/huskyflow",
+        "text": (
+            "HuskyFlow is a full-stack Q&A platform Olivia Gao built, inspired by Stack Overflow. "
+            "Features: community spaces with user following, Google OAuth authentication, "
+            "and real-time polls implemented with WebSockets so votes update live and polls auto-expire. "
+            "Tech stack: TypeScript, React, Node.js, MongoDB, WebSockets. "
+            "GitHub: github.com/olivegaoden/CS4530-fake-stack-overflow. Has a live demo."
+        ),
+    },
+    {
+        "id": "project_text_simplification",
+        "source": "projects/text-simplification",
+        "text": (
+            "Olivia Gao built a Text Simplification Application using Python, PyTorch, React, and Flask. "
+            "She developed a custom word complexity scoring approach and fine-tuned a T5 transformer model for text simplification. "
+            "She created a React + Flask web app that accepts text or audio input and returns simplified output with text-to-speech. "
+            "GitHub: github.com/olivegaoden/NLP-text-simplification."
+        ),
+    },
+    {
+        "id": "project_shell",
+        "source": "projects/shell",
+        "text": (
+            "Olivia Gao implemented a Custom Command Line Shell in C on Linux. "
+            "Uses Linux syscalls: fork, exec, pipe. "
+            "Supports full command execution, multi-stage pipelines (cmd1 | cmd2), and I/O redirection (< and >). "
+            "Demonstrates low-level systems programming and OS concepts. "
+            "GitHub: github.com/olivegaoden."
+        ),
+    },
+    {
+        "id": "project_portfolio",
+        "source": "projects/portfolio-os",
+        "text": (
+            "Portfolio OS is Olivia Gao's interactive portfolio website built as a desktop OS UI. "
+            "Features: draggable and resizable windows, a window manager with z-index focus stacking, "
+            "a taskbar with live clock, desktop icons, responsive layout (desktop OS on large screens, "
+            "scrollable mobile layout on small screens), and an AI assistant powered by RAG (FAISS + OpenAI). "
+            "Tech stack: React, TypeScript, Vite, Tailwind CSS, Framer Motion, FastAPI, FAISS."
+        ),
+    },
+    {
+        "id": "personality",
         "source": "about_me.txt",
         "text": (
-            "Outside of work, Olivia enjoys crochet, cozy gaming, and singing. "
-            "She has a background in graphic and information design from her minor at Northeastern, "
-            "which informs her approach to building user-facing software."
+            "Olivia Gao's interests outside of work: crochet, cozy gaming, and singing. "
+            "She has a Minor in Graphic and Information Design which shapes how she thinks about "
+            "building polished, accessible, user-facing software. "
+            "She is collaborative, curious, and cares about craft and user experience. "
+            "She enjoys work at the intersection of engineering and design."
+        ),
+    },
+    {
+        "id": "availability",
+        "source": "contact.json",
+        "text": (
+            "Olivia Gao is open to new software engineering opportunities. "
+            "She is particularly interested in roles involving frontend engineering, full-stack development, "
+            "or design-focused engineering teams. "
+            "She is available for full-time roles in the New York Metropolitan Area. "
+            "Best way to reach her: oliviagao825@gmail.com or linkedin.com/in/olivia-gao03."
         ),
     },
 ]

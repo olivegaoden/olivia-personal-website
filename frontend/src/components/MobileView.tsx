@@ -78,7 +78,6 @@ const MobileAIChat: React.FC = () => {
           <div key={i} className={`flex gap-2 items-start ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
             <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-sm"
               style={{ border: '2px solid', borderColor: m.role === 'ai' ? '#7c6bc0' : '#e879a0', background: m.role === 'ai' ? 'rgba(184,174,232,0.3)' : 'rgba(247,168,196,0.3)' }}>
-              {m.role === 'ai' ? '🤖' : '🧑'}
             </div>
             <div className={`chat-bubble ${m.role === 'user' ? 'user' : ''}`} style={{ maxWidth: '82%' }}
               dangerouslySetInnerHTML={{ __html: renderMd(m.text) }} />
@@ -86,7 +85,7 @@ const MobileAIChat: React.FC = () => {
         ))}
         {loading && (
           <div className="flex gap-2 items-start">
-            <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-sm" style={{ border: '2px solid #7c6bc0', background: 'rgba(184,174,232,0.3)' }}>🤖</div>
+            <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-sm" style={{ border: '2px solid #7c6bc0', background: 'rgba(184,174,232,0.3)' }}></div>
             <div className="chat-bubble">
               <div style={{ display: 'flex', gap: 4 }}>
                 {[0,1,2].map(i => <div key={i} style={{ width: 6, height: 6, background: '#b8aee8', border: '1px solid #7c6bc0', animation: `typing-bounce 1.2s ease-in-out infinite`, animationDelay: `${i*0.2}s` }} />)}
@@ -177,7 +176,7 @@ export const MobileView: React.FC = () => {
             Software Engineer · CS + Design · NYC Metro
           </p>
           <div className="flex flex-wrap gap-2 justify-center mt-3">
-            {["AT&T SWE 📡", "Northeastern '25 🎓", "GPA 3.9 ⭐"].map(t => (
+            {["AT&T SWE", "Northeastern '25", "GPA 3.9"].map(t => (
               <span key={t} className="px-chip">{t}</span>
             ))}
           </div>
@@ -194,7 +193,10 @@ export const MobileView: React.FC = () => {
             </p>
             <p className="font-body font-semibold text-ink-mid mt-2" style={{ fontSize: 12, lineHeight: 1.7 }}>
               Currently a Software Engineer at <strong>AT&amp;T</strong>. Previously co-ops at
-              MORSE Corp and Skillz. 🧶 Crochet · 🎮 Cozy gaming · 🎤 Singing
+              MORSE Corp and Skillz. 
+            </p>
+            <p className="font-body font-semibold text-ink-mid mt-2" style={{ fontSize: 12, lineHeight: 1.7 }}>
+              Interests include: crochet, cozy gaming, singing
             </p>
           </div>
 
@@ -271,7 +273,7 @@ export const MobileView: React.FC = () => {
               <p className="font-body font-semibold text-ink-mid mb-2" style={{ fontSize: 12, lineHeight: 1.6 }}>{p.description}</p>
               <div className="flex flex-wrap gap-1.5 mb-3">{p.tech.map(t => <span key={t} className="px-chip">{t}</span>)}</div>
               <div className="flex gap-2">
-                <a href={p.githubUrl} className="px-btn" style={{ fontSize: 7, textDecoration: 'none' }}>🐙 GITHUB</a>
+                {p.githubUrl && <a href={p.githubUrl} className="px-btn" style={{ fontSize: 7, textDecoration: 'none' }}>GITHUB</a>}
                 {p.liveUrl && <a href={p.liveUrl} className="px-btn pink" style={{ fontSize: 7, textDecoration: 'none' }}>▶ DEMO</a>}
               </div>
             </div>
@@ -315,7 +317,7 @@ export const MobileView: React.FC = () => {
         </section>
 
         <div className="text-center pb-6">
-          <p className="font-mono text-ink-mid" style={{ fontSize: 16 }}>✨ Made with love &amp; pixels by Olivia</p>
+          <p className="font-mono text-ink-mid" style={{ fontSize: 16 }}>✨ Made by Olivia</p>
         </div>
       </div>
     </div>

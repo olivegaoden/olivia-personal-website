@@ -3,7 +3,7 @@ import { EXPERIENCE } from '../../data/portfolio'
 
 export const ExperienceWindow: React.FC = () => {
   // Using 'expanded' instead of 'open' to avoid any name collision
-  const [expanded, setExpanded] = useState<string | null>('AT&T')
+  const [expanded, setExpanded] = useState<Set<string>>(new Set(['AT&T']))
 
   if (!EXPERIENCE || EXPERIENCE.length === 0) {
     return <p className="font-mono text-[16px] text-ink-mid p-4">No experience data found.</p>
@@ -41,7 +41,7 @@ export const ExperienceWindow: React.FC = () => {
       <p className="font-pixel text-[6px] text-lav-dark tracking-wide">// WORK EXPERIENCE</p>
 
       {EXPERIENCE.map(exp => {
-        const isExpanded = expanded === exp.company
+        const isExpanded = expanded.has(exp.company)
         return (
           <div
             key={exp.company}
@@ -54,7 +54,7 @@ export const ExperienceWindow: React.FC = () => {
             <button
               className="w-full flex items-center gap-3 px-3 py-2.5 text-left"
               style={{ cursor: 'pointer', background: 'transparent', border: 'none' }}
-              onClick={() => setExpanded(isExpanded ? null : exp.company)}
+              onClick={() => setExpanded(prev => { const n = new Set(prev); isExpanded ? n.delete(exp.company) : n.add(exp.company); return n })}
             >
               <div
                 className="flex-shrink-0 w-8 h-8 flex items-center justify-center text-base"

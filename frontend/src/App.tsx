@@ -20,12 +20,12 @@ function getWinTitles() {
   const vw = window.innerWidth
   const vh = window.innerHeight
   return {
-    welcome:    { title: 'welcome.exe',    minW: Math.round(vw * 0.25), minH: Math.round(vh * 0.35) },
-    about:      { title: 'about_me.txt',   minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.40) },
-    experience: { title: 'experience.txt', minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.38) },
-    projects:   { title: 'projects/',      minW: Math.round(vw * 0.30), minH: Math.round(vh * 0.40) },
-    contact:    { title: 'contact.json',   minW: Math.round(vw * 0.24), minH: Math.round(vh * 0.32) },
-    ai:         { title: 'olivia_ai.exe',  minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.45) },
+    welcome:    { title: 'welcome.exe',    minW: Math.round(vw * 0.22), minH: Math.round(vh * 0.25) },
+    about:      { title: 'about_me.txt',   minW: Math.round(vw * 0.24), minH: Math.round(vh * 0.28) },
+    experience: { title: 'experience.txt', minW: Math.round(vw * 0.24), minH: Math.round(vh * 0.26) },
+    projects:   { title: 'projects/',      minW: Math.round(vw * 0.26), minH: Math.round(vh * 0.28) },
+    contact:    { title: 'contact.json',   minW: Math.round(vw * 0.20), minH: Math.round(vh * 0.22) },
+    ai:         { title: 'olivia_ai.exe',  minW: Math.round(vw * 0.24), minH: Math.round(vh * 0.30) },
   } as Record<WindowId, { title: string; minW: number; minH: number }>
 }
 

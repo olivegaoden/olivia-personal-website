@@ -4,7 +4,7 @@ import type { WindowId } from '../../hooks/useWindowManager'
 interface Props { openWindow: (id: WindowId) => void }
 
 export const WelcomeWindow: React.FC<Props> = ({ openWindow }) => (
-  <div className="flex flex-col items-center text-center gap-4 h-full justify-center px-4">
+  <div className="flex flex-col items-center text-center gap-4 px-4 py-2">
 
     <div className="flex flex-col items-center gap-1">
       <h1 className="font-pixel text-[14px] text-ink leading-8">
@@ -37,7 +37,7 @@ export const WelcomeWindow: React.FC<Props> = ({ openWindow }) => (
       className="font-pixel text-ink-light leading-relaxed"
       style={{ fontSize: 6, border: '1px dashed #9b94c0', padding: '6px 12px' }}
     >
-      💡 DBL-CLICK ICONS · DRAG TITLEBARS · CLICK TO FOCUS
+      CLICK ICONS · DRAG WINDOWS · CLICK TO FOCUS WINDOW
     </p>
   </div>
 )

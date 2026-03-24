@@ -12,6 +12,6 @@ export const Statusbar: React.FC = () => (
   >
     <div className="w-2 h-2 flex-shrink-0 pulse-green" style={{ background: '#77e8a0', border: '1px solid #4db87a' }} />
     <span className="font-pixel text-[6px] text-ink-light">OLIVIA.DEV OS v1.0</span>
-    <span className="font-pixel text-[6px] text-ink-light ml-auto">✨ MADE WITH LOVE &amp; PIXELS</span>
+    <span className="font-pixel text-[6px] text-ink-light ml-auto">✨ MADE BY OLIVIA</span>
   </div>
 )

@@ -58,10 +58,11 @@ export function useWindowManager() {
           const vw  = window.innerWidth
           const vh  = window.innerHeight - TASKBAR_H - STATUSBAR_H
           const { wFrac, hFrac } = WIN_FRACTIONS[id]
+          // Recalculate ideal size from fractions
           const width  = Math.round(vw * wFrac)
           const height = Math.round(vh * hFrac)
-          const x = Math.max(0, Math.round((vw - width)  / 2))
-          const y = Math.max(0, Math.round((vh - height) / 2)) + TASKBAR_H
+          const x = Math.max(0, Math.min(vw - width,  Math.round((vw - width)  / 2)))
+          const y = Math.max(0, Math.min(vh - height, Math.round((vh - height) / 2))) + TASKBAR_H
           next[id] = { ...w, x, y, width, height }
         }
         return next

@@ -24,7 +24,7 @@ from app.rag.knowledge_base import DOCUMENTS
 
 EMBED_MODEL = "text-embedding-3-small"
 CHAT_MODEL  = "gpt-4o-mini"
-TOP_K       = 4
+TOP_K       = 6
 CHUNK_WORDS = 120
 OVERLAP     = 20
 
