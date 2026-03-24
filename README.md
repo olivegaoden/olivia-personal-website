@@ -1,10 +1,10 @@
-# 🖥️ Olivia.dev — Portfolio OS
+# Olivia.dev — Portfolio OS
 
 A pixel-art desktop OS portfolio with a full React frontend, draggable windows, and an AI assistant powered by a RAG pipeline (FastAPI + FAISS + OpenAI).
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 portfolio-os/
@@ -51,7 +51,7 @@ portfolio-os/
 
 ---
 
-## 🚀 Frontend Setup
+## Frontend Setup
 
 ```bash
 cd frontend
@@ -67,7 +67,7 @@ npm run build
 
 ---
 
-## 🤖 Backend Setup
+## Backend Setup
 
 ```bash
 cd backend
@@ -89,7 +89,7 @@ Endpoints:
 
 ---
 
-## ✏️ Customising Content
+## Customising Content
 
 **Projects & skills** → `frontend/src/data/portfolio.ts`
 
@@ -105,7 +105,7 @@ Each document is:
 
 ---
 
-## 🌐 Deployment
+## Deployment
 
 **Frontend** → Vercel / Netlify / GitHub Pages (static export)
 ```bash
@@ -118,13 +118,13 @@ npm run build   # outputs to dist/
 
 ---
 
-## ✨ Features
+## Features
 
 | Feature | Details |
 |---|---|
-| 🪟 Window system | Open, close, minimize, drag, resize, z-index stacking |
-| 🖥️ Desktop OS UI | Taskbar with tabs + clock, icons, statusbar |
-| 🎨 Pixel art aesthetic | SVG pixel clouds, stars, moon, pixel borders, pixel fonts |
-| 🤖 AI assistant | RAG pipeline (FAISS + OpenAI) with typing animation + source citations |
-| 📱 Responsive | Works on desktop; windows scroll on smaller screens |
-| ⚡ Zero-backend fallback | Smart local answers if API isn't running |
+| Window system | Open, close, minimize, drag, resize, z-index stacking |
+| Desktop OS UI | Taskbar with tabs + clock, icons, statusbar |
+| Pixel art aesthetic | SVG pixel clouds, stars, moon, pixel borders, pixel fonts |
+| AI assistant | RAG pipeline (FAISS + OpenAI) with typing animation + source citations |
+| Responsive | Works on desktop; windows scroll on smaller screens |
+| Zero-backend fallback | Smart local answers if API isn't running |
