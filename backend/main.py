@@ -37,8 +37,12 @@ async def startup():
     if not api_key:
         logger.warning("OPENAI_API_KEY not set — AI will be unavailable")
     rag = RAGPipeline(api_key=api_key)
-    rag.build_index()
-    logger.info("RAG pipeline ready ✓")
+    try:
+        rag.build_index()
+        logger.info("RAG pipeline ready ✓")
+    except Exception as e:
+        logger.error(f"RAG pipeline failed to build: {e} — server will still start, queries will use fallback")
+        rag.ready = False
 
 
 class QueryRequest(BaseModel):
