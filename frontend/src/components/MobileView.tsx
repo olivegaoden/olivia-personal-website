@@ -323,7 +323,7 @@ export const MobileView: React.FC = () => {
             <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '2px solid rgba(184,174,232,0.3)' }}>
               <p className="font-pixel text-ink" style={{ fontSize: 7 }}>OLIVIA GAO — RESUME</p>
               <a
-                href="/resume.pdf"
+                href={`${import.meta.env.BASE_URL}resume.pdf`}
                 download="Olivia_Gao_Resume.pdf"
                 className="px-btn pink"
                 style={{ textDecoration: 'none', fontSize: 6 }}
@@ -333,7 +333,7 @@ export const MobileView: React.FC = () => {
             </div>
             {/* PDF embed — tall enough to show full resume on mobile */}
             <iframe
-              src="/resume.pdf#toolbar=0&navpanes=0&scrollbar=1"
+              src={`${import.meta.env.BASE_URL}resume.pdf#toolbar=0&navpanes=0&scrollbar=1`}
               style={{ width: '100%', height: 500, border: 'none', display: 'block' }}
               title="Olivia Gao Resume"
             />

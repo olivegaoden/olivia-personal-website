@@ -1,7 +1,6 @@
 import React from 'react'
 
-// Place your resume PDF at: public/resume.pdf
-const RESUME_PDF = '/resume.pdf'
+const RESUME_PDF = `${import.meta.env.BASE_URL}resume.pdf`
 
 export const ResumeWindow: React.FC = () => (
   <div className="flex flex-col h-full -m-4" style={{ height: 'calc(100% + 2rem)' }}>
