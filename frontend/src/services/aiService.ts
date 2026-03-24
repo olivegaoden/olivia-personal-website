@@ -85,6 +85,12 @@ const OLIVIA_CONTEXT = `
 ## Weaknesses / Areas for Growth
 1. Over-scoping — tends to notice and want to fix everything in scope; working on staying focused on the task and filing separate tickets for improvements spotted along the way
 2. Public speaking / presenting to large groups — finds large-audience presentations challenging; actively working on it by seeking out opportunities to present
+
+## Work Preferences
+- Work authorization: US citizen, no sponsorship required
+- Work location preference: open to in-person, hybrid, or fully remote in NYC metro area
+- Start date: available with 2 weeks notice
+- Looking for: a role that combines full-stack and ML/AI work, a product she's passionate about, and an environment where she can have a voice and grow
 `.trim()
 
 // ── Types ─────────────────────────────────────────────────────────────────
@@ -254,6 +260,60 @@ function staticFallback(question: string): AIResponse {
       heading: '## Interests',
       answer: "Outside of work, Olivia enjoys **crochet** 🧶, **cozy gaming** 🎮, and **singing** 🎤. Her design minor means she thinks carefully about aesthetics and user experience in everything she builds.",
       sources: ['about_me.txt'],
+    },
+    {
+      pattern: /frontend|front.end|front end|ui|interface/,
+      heading: '## Specialty Areas',
+      answer: "**Frontend:** Olivia has strong frontend experience — Angular at AT&T (35,000+ technicians), React at Skillz (3M MAUs), and React Native for cross-platform mobile. She also has a Graphic & Information Design minor which shapes how she thinks about UI.",
+      sources: ['resume.txt', 'projects/'],
+    },
+    {
+      pattern: /backend|back.end|back end/,
+      heading: '## Specialty Areas',
+      answer: "**Backend:** Olivia has strong backend experience — Node.js, Flask, FastAPI, Kafka pipelines (AT&T), REST APIs, Docker, Jenkins CI/CD.",
+      sources: ['resume.txt', 'projects/'],
+    },
+    {
+      pattern: /ml|machine learning|ai|artificial intelligence/,
+      heading: '## Specialty Areas',
+      answer: "**ML/AI:** Built ML monitoring dashboards at MORSE Corp using Palantir Foundry, fine-tuned a T5 transformer for text simplification, and built a RAG pipeline with FAISS + GPT-4o-mini for this portfolio site.",
+      sources: ['resume.txt', 'projects/'],
+    },
+    {
+      pattern: /full.?stack|generalist|breadth/,
+      heading: '## Specialty Areas',
+      answer: "Olivia has full-stack experience across frontend, backend, and ML/AI. She's comfortable working across the stack and enjoys projects that let her leverage that breadth.",
+      sources: ['resume.txt', 'projects/'],
+    },
+    {
+      pattern: /authorized|work authorization|visa|citizen|sponsorship|eligible/,
+      heading: '## Work Authorization',
+      answer: "Olivia is a **US citizen** and fully authorized to work in the United States. No visa sponsorship is required.",
+      sources: ['contact.json'],
+    },
+    {
+      pattern: /location|remote|hybrid|in.person|onsite|on.site|relocat|where.*work|work.*where/,
+      heading: '## Location & Work Preference',
+      answer: "Olivia is based in the **NYC metro area** and is open to **in-person, hybrid, or fully remote** roles.",
+      sources: ['contact.json'],
+    },
+    {
+      pattern: /start|notice|available|when.*start|start.*when/,
+      heading: '## Start Date',
+      answer: "Olivia can start with **2 weeks notice** after accepting an offer.",
+      sources: ['contact.json'],
+    },
+    {
+      pattern: /looking for|next role|ideal role|want in a job|seeking|what.*want|goals|why.*new|why.*looking|career goal/,
+      heading: '## What She\'s Looking For',
+      answer: "Olivia is looking for a role where she can **grow across the stack** — particularly deepening her experience in **ML and AI** while continuing her full-stack work. She wants to combine both effectively to become a stronger engineer and stay ahead of how the industry is evolving.\n\nBeyond the technical side, she wants to work on a **product she's genuinely passionate about**, at a company where she can **have a voice** — making suggestions, shaping decisions, and contributing beyond just executing tickets.",
+      sources: ['about_me.txt'],
+    },
+    {
+      pattern: /salary|compensation|pay|rate|expect.*salary|salary.*expect/,
+      heading: '## Compensation',
+      answer: "For specific compensation expectations, please reach out to Olivia directly at **oliviagao825@gmail.com** — she's happy to discuss.",
+      sources: ['contact.json'],
     },
   ]
 

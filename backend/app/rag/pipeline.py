@@ -8,6 +8,10 @@ RAG Pipeline
 """
 import logging
 from typing import Any
+import os
+
+INDEX_PATH  = "faiss.index"
+CHUNKS_PATH = "chunks.npy"
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +50,14 @@ class RAGPipeline:
             logger.warning("Skipping FAISS build — missing deps or API key")
             return
 
+        if os.path.exists(INDEX_PATH) and os.path.exists(CHUNKS_PATH):
+            logger.info("Loading FAISS index from cache…")
+            self.index  = faiss.read_index(INDEX_PATH)
+            self.chunks = np.load(CHUNKS_PATH, allow_pickle=True).tolist()
+            self.ready  = True
+            logger.info(f"FAISS index loaded — {self.index.ntotal} vectors")
+            return
+
         self.chunks = self._chunk_documents(DOCUMENTS)
         texts = [c["text"] for c in self.chunks]
 
@@ -55,8 +67,12 @@ class RAGPipeline:
         dim = len(vectors[0])
         self.index = faiss.IndexFlatL2(dim)
         self.index.add(np.array(vectors, dtype="float32"))
+
+        faiss.write_index(self.index, INDEX_PATH)
+        np.save(CHUNKS_PATH, np.array(self.chunks, dtype=object))
+
         self.ready = True
-        logger.info(f"FAISS index built — {self.index.ntotal} vectors, dim={dim}")
+        logger.info(f"FAISS index built and cached — {self.index.ntotal} vectors, dim={dim}")
 
     # ── Query ─────────────────────────────────────────────────────────────
     def query(self, question: str, history: list | None = None) -> dict:

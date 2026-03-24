@@ -24,7 +24,6 @@ DOCUMENTS = [
         "text": (
             "Olivia Gao contact information: "
             "Email: oliviagao825@gmail.com. "
-            "Phone: (908) 581-2578. "
             "LinkedIn: linkedin.com/in/olivia-gao03. "
             "GitHub: github.com/olivegaoden. "
             "Location: New York Metropolitan Area. "
@@ -37,7 +36,8 @@ DOCUMENTS = [
         "text": (
             "Olivia Gao attended Northeastern University in Boston, MA. "
             "She earned a Bachelor of Science in Computer Science "
-            "with a Minor in Graphic and Information Design, graduating in May 2025. "
+            "with a Minor in Graphic and Information Design and a concentration "
+            "in Artificial Intelligence, graduating in May 2025. "
             "GPA: 3.9 out of 4.0. Dean's List every semester. "
             "The design minor gives her a strong foundation in visual thinking, "
             "information hierarchy, and user experience alongside her CS degree."

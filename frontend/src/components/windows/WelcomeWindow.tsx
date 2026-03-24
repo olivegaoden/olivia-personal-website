@@ -22,8 +22,8 @@ export const WelcomeWindow: React.FC<Props> = ({ openWindow }) => (
     </div>
 
     <p className="font-body text-[13px] text-ink-mid leading-relaxed max-w-xs font-semibold">
-      CS grad with a minor in Graphic &amp; Information Design. Welcome to my
-      portfolio — explore the windows, drag them around, and ask my AI assistant anything!
+      CS grad with a minor in Graphic &amp; Information Design and a concentration in Artificial Intelligence. 
+      Welcome to my portfolio — explore the windows, drag them around, and ask my AI assistant anything!
     </p>
 
     <div className="flex flex-wrap gap-2 justify-center">
