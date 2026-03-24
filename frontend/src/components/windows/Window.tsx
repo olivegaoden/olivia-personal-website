@@ -34,7 +34,7 @@ export const Window: React.FC<WindowProps> = ({
 }) => {
   const { onMouseDown } = useDraggable({ onMove, onFocus })
   const resizing    = useRef(false)
-  const resizeStart = useRef({ mx: 0, my: 0, w: 0, h: 0 })
+  const resizeStart = useRef({ mx: 0, my: 0, w: 0, h: 0, wx: 0, wy: 0 })
 
   const [maximized, setMaximized] = useState(false)
   const preMax = useRef({ x, y, width, height })
@@ -57,15 +57,20 @@ export const Window: React.FC<WindowProps> = ({
   const onResizeDown = (e: React.MouseEvent) => {
     if (maximized) return
     resizing.current = true
-    resizeStart.current = { mx: e.clientX, my: e.clientY, w: width, h: height }
+    resizeStart.current = { mx: e.clientX, my: e.clientY, w: width, h: height, wx: x, wy: y }
     e.preventDefault()
     e.stopPropagation()
+
     const onMove_ = (me: MouseEvent) => {
       if (!resizing.current) return
-      onResize(
-        Math.max(minWidth,  resizeStart.current.w + me.clientX - resizeStart.current.mx),
-        Math.max(minHeight, resizeStart.current.h + me.clientY - resizeStart.current.my),
-      )
+      const vw = window.innerWidth
+      const vh = window.innerHeight
+      // Max size = distance from window's top-left corner to the screen edge minus statusbar
+      const maxW = vw - resizeStart.current.wx
+      const maxH = vh - resizeStart.current.wy - STATUSBAR_H
+      const newW = Math.max(minWidth,  Math.min(maxW, resizeStart.current.w + me.clientX - resizeStart.current.mx))
+      const newH = Math.max(minHeight, Math.min(maxH, resizeStart.current.h + me.clientY - resizeStart.current.my))
+      onResize(newW, newH)
     }
     const onUp = () => {
       resizing.current = false
@@ -92,25 +97,13 @@ export const Window: React.FC<WindowProps> = ({
           {/* TITLEBAR */}
           <div
             className="pixel-titlebar flex-shrink-0"
-            onMouseDown={e => !maximized && onMouseDown(e, x, y)}
+            onMouseDown={e => !maximized && onMouseDown(e, x, y, width, height)}
             onDoubleClick={handleMaximize}
           >
             <div className="flex gap-1.5 flex-shrink-0">
-              <button
-                className="win-dot close"
-                onClick={e => { e.stopPropagation(); onClose() }}
-                title="Close"
-              />
-              <button
-                className="win-dot min"
-                onClick={e => { e.stopPropagation(); onMinimize() }}
-                title="Minimise"
-              />
-              <button
-                className="win-dot expand"
-                onClick={handleMaximize}
-                title={maximized ? 'Restore' : 'Maximise'}
-              />
+              <button className="win-dot close"  onClick={e => { e.stopPropagation(); onClose()    }} title="Close"    />
+              <button className="win-dot min"    onClick={e => { e.stopPropagation(); onMinimize() }} title="Minimise" />
+              <button className="win-dot expand" onClick={handleMaximize} title={maximized ? 'Restore' : 'Maximise'} />
             </div>
             <span className="font-pixel text-[7px] text-ink flex-1 text-center truncate pointer-events-none">
               {title}

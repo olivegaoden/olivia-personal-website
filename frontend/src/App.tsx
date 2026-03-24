@@ -1,5 +1,6 @@
 import React from 'react'
 import { useWindowManager, type WindowId } from './hooks/useWindowManager'
+import { useIsMobile } from './hooks/useViewport'
 import { Window } from './components/windows/Window'
 import { WelcomeWindow } from './components/windows/WelcomeWindow'
 import { AboutWindow } from './components/windows/AboutWindow'
@@ -11,18 +12,21 @@ import { Taskbar } from './components/Taskbar'
 import { DesktopIcons } from './components/DesktopIcons'
 import { DesktopBackground } from './components/DesktopBackground'
 import { Statusbar } from './components/Statusbar'
+import { MobileView } from './components/MobileView'
 
-// minWidth/minHeight computed as fraction of viewport so resize never gets too small
-const vw = window.innerWidth
-const vh = window.innerHeight
-
-const WIN_TITLES: Record<WindowId, { title: string; minW?: number; minH?: number }> = {
-  welcome:    { title: 'welcome.exe',    minW: Math.round(vw * 0.25), minH: Math.round(vh * 0.35) },
-  about:      { title: 'about_me.txt',   minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.40) },
-  experience: { title: 'experience.txt', minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.38) },
-  projects:   { title: 'projects/',      minW: Math.round(vw * 0.30), minH: Math.round(vh * 0.40) },
-  contact:    { title: 'contact.json',   minW: Math.round(vw * 0.24), minH: Math.round(vh * 0.32) },
-  ai:         { title: 'olivia_ai.exe',  minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.45) },
+// minWidth/minHeight are viewport-relative — recalculated on each render so they
+// stay correct after window resize.
+function getWinTitles() {
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+  return {
+    welcome:    { title: 'welcome.exe',    minW: Math.round(vw * 0.25), minH: Math.round(vh * 0.35) },
+    about:      { title: 'about_me.txt',   minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.40) },
+    experience: { title: 'experience.txt', minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.38) },
+    projects:   { title: 'projects/',      minW: Math.round(vw * 0.30), minH: Math.round(vh * 0.40) },
+    contact:    { title: 'contact.json',   minW: Math.round(vw * 0.24), minH: Math.round(vh * 0.32) },
+    ai:         { title: 'olivia_ai.exe',  minW: Math.round(vw * 0.28), minH: Math.round(vh * 0.45) },
+  } as Record<WindowId, { title: string; minW: number; minH: number }>
 }
 
 const WIN_CONTENT: Record<WindowId, (open: (id: WindowId) => void) => React.ReactNode> = {
@@ -35,14 +39,21 @@ const WIN_CONTENT: Record<WindowId, (open: (id: WindowId) => void) => React.Reac
 }
 
 export default function App() {
+  const isMobile = useIsMobile(768)
   const { windows, open, close, minimize, focus, move, resize, activeId } = useWindowManager()
 
+  // ── MOBILE: single-page scrollable layout ────────────────────────────────
+  if (isMobile) {
+    return <MobileView />
+  }
+
+  // ── DESKTOP: full OS window system ───────────────────────────────────────
+  const WIN_TITLES = getWinTitles()
+
   return (
-    <div className="desktop-bg pixel-grid w-full h-full relative overflow-hidden">
-      {/* Decorative background elements */}
+    <div className="desktop-bg pixel-grid desktop-os-root relative">
       <DesktopBackground />
 
-      {/* Taskbar */}
       <Taskbar
         windows={windows}
         activeId={activeId}
@@ -50,10 +61,8 @@ export default function App() {
         onMinimize={minimize}
       />
 
-      {/* Desktop icons */}
       <DesktopIcons onOpen={open} />
 
-      {/* Windows */}
       {(Object.keys(windows) as WindowId[]).map(id => {
         const w    = windows[id]
         const meta = WIN_TITLES[id]
@@ -81,7 +90,6 @@ export default function App() {
         )
       })}
 
-      {/* Statusbar */}
       <Statusbar />
     </div>
   )

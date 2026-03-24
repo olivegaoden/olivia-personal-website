@@ -2,21 +2,18 @@ import React, { useState } from 'react'
 
 const LINKS = [
   {
-    icon: '✉️',
     label: 'Email',
     value: 'oliviagao825@gmail.com',
     href: 'mailto:oliviagao825@gmail.com',
     copyValue: 'oliviagao825@gmail.com',
   },
   {
-    icon: '💼',
     label: 'LinkedIn',
     value: 'linkedin.com/in/olivia-gao03',
     href: 'https://www.linkedin.com/in/olivia-gao03',
     copyValue: null,
   },
   {
-    icon: '🐙',
     label: 'GitHub',
     value: 'github.com/olivegaoden',
     href: 'https://github.com/olivegaoden',
@@ -70,7 +67,7 @@ export const ContactWindow: React.FC = () => {
             e.currentTarget.style.boxShadow = '3px 3px 0 #7c6bc0'
           }}
         >
-          <span className="text-2xl flex-shrink-0">{l.icon}</span>
+          <span className="text-2xl flex-shrink-0"></span>
           <div className="flex flex-col min-w-0 flex-1">
             <span className="font-pixel text-[7px] text-ink">{l.label}</span>
             <span className="font-mono text-[16px] text-ink-mid truncate">{l.value}</span>

@@ -29,11 +29,24 @@ html, body, #root {
   width: 100%;
   height: 100%;
   margin: 0;
-  overflow: hidden;
   font-family: 'Nunito', sans-serif;
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Crect width='4' height='4' fill='%239b8dd4'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%239b8dd4'/%3E%3C/svg%3E") 2 2, auto;
 }
 
+/* Desktop OS: lock to full screen, no scroll */
+.desktop-os-root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Mobile: allow page to scroll freely */
+.mobile-root {
+  min-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+ 
 /* ── PIXEL BORDER UTILITY ── */
 .pixel-border {
   border: 3px solid var(--lav-dark);
@@ -320,4 +333,61 @@ html, body, #root {
 .proj-card:hover {
   transform: translate(-2px, -2px);
   box-shadow: 5px 5px 0 var(--lav-dark);
+}
+
+/* ── MOBILE RESPONSIVE ── */
+
+/* Prevent overscroll bounce on mobile */
+html {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile: hide pixel cursor (doesn't work on touch) */
+@media (pointer: coarse) {
+  * { cursor: auto !important; }
+}
+
+/* Mobile nav tab scrollbar hidden */
+nav [class*="overflow-x"] {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+nav [class*="overflow-x"]::-webkit-scrollbar {
+  display: none;
+}
+
+/* details/summary pixel styling for mobile experience accordion */
+details > summary {
+  user-select: none;
+  -webkit-user-select: none;
+}
+details[open] > summary {
+  border-bottom: 2px dashed rgba(155,141,212,0.3);
+}
+details[open] {
+  border-color: #e879a0!important;
+  box-shadow: 3px 3px 0 #e879a0 !important;
+}
+
+/* On small screens, ensure pixel font doesn't overflow */
+@media (max-width: 480px) {
+  .font-pixel, [class*="font-pixel"] {
+    word-break: break-word;
+  }
+  .px-tab {
+    font-size: 6px !important;
+    padding: 5px 8px !important;
+  }
+}
+
+/* Touch-friendly hit targets */
+@media (pointer: coarse) {
+  .px-btn {
+    min-height: 40px;
+    min-width: 40px;
+  }
+  .win-dot {
+    width: 16px !important;
+    height: 16px !important;
+  }
 }

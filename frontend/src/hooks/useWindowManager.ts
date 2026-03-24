@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 
 export type WindowId = 'welcome' | 'about' | 'experience' | 'projects' | 'contact' | 'ai'
 
@@ -46,6 +46,30 @@ const initWindows = (): Record<WindowId, WindowState> =>
 export function useWindowManager() {
   const [windows, setWindows] = useState<Record<WindowId, WindowState>>(initWindows)
   const zTopRef = useRef(10)
+
+  // Re-center and resize all OPEN windows when viewport changes
+  useEffect(() => {
+    const handleResize = () => {
+      setWindows(prev => {
+        const next = { ...prev }
+        for (const id of IDS) {
+          const w = prev[id]
+          if (!w.isOpen) continue
+          const vw  = window.innerWidth
+          const vh  = window.innerHeight - TASKBAR_H - STATUSBAR_H
+          const { wFrac, hFrac } = WIN_FRACTIONS[id]
+          const width  = Math.round(vw * wFrac)
+          const height = Math.round(vh * hFrac)
+          const x = Math.max(0, Math.round((vw - width)  / 2))
+          const y = Math.max(0, Math.round((vh - height) / 2)) + TASKBAR_H
+          next[id] = { ...w, x, y, width, height }
+        }
+        return next
+      })
+    }
+    window.addEventListener('resize', handleResize, { passive: true })
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const open = useCallback((id: WindowId) => {
     zTopRef.current += 1

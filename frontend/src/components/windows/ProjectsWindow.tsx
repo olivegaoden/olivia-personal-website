@@ -20,11 +20,11 @@ export const ProjectsWindow: React.FC = () => (
           {p.tech.map(t => <span key={t} className="px-chip">{t}</span>)}
         </div>
         <div className="flex gap-2">
-          <a href={p.githubUrl} className="px-btn" style={{ fontSize: 7 }}>
+          <a href={p.githubUrl} target="_blank" rel="noopener noreferrer" className="px-btn" style={{ fontSize: 7 }}>
             GITHUB
           </a>
           {p.liveUrl && (
-            <a href={p.liveUrl} className="px-btn pink" style={{ fontSize: 7 }}>
+            <a href={p.liveUrl} target="_blank" rel="noopener noreferrer" className="px-btn pink" style={{ fontSize: 7 }}>
               ▶ LIVE DEMO
             </a>
           )}
