@@ -7,6 +7,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -15,13 +17,16 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install & Build
+      - name: Install dependencies
         working-directory: frontend
+        run: npm install
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
         env:
           VITE_OPENAI_API_KEY: ${{ secrets.VITE_OPENAI_API_KEY }}
-        run: |
-          npm install
-          npm run build
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
