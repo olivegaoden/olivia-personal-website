@@ -1,52 +1,60 @@
-# Olivia.dev — Portfolio OS
+# Olivia Gao — Portfolio OS
 
-A pixel-art desktop OS portfolio with a full React frontend, draggable windows, and an AI assistant powered by a RAG pipeline (FastAPI + FAISS + OpenAI).
+A pixel-art desktop OS portfolio with a full React frontend, draggable/resizable windows, a responsive mobile layout, and an AI assistant powered by a RAG pipeline (FastAPI + FAISS + OpenAI).
+
+**Live site:** [olivegaoden.github.io/olivia-personal-website](https://olivegaoden.github.io/olivia-personal-website)
 
 ---
 
 ## Project Structure
 
 ```
-portfolio-os/
-├── frontend/                     ← React + TypeScript + Vite
+olivia-personal-website/
+├── frontend/                          ← React + TypeScript + Vite + Tailwind
+│   ├── public/
+│   │   └── resume.pdf
 │   ├── index.html
 │   ├── package.json
 │   ├── tailwind.config.js
-│   ├── vite.config.ts
+│   ├── vite.config.ts                 ← base: '/olivia-personal-website/' for GitHub Pages
 │   ├── tsconfig.json
 │   └── src/
-│       ├── main.tsx              ← entry point
-│       ├── App.tsx               ← root layout, window orchestration
+│       ├── main.tsx
+│       ├── App.tsx                    ← desktop/mobile branch, window orchestration
 │       ├── styles/
-│       │   └── globals.css       ← pixel design system + Tailwind
+│       │   └── globals.css            ← pixel design system + Tailwind
 │       ├── hooks/
-│       │   ├── useWindowManager.ts  ← open/close/focus/z-index state
-│       │   └── useDraggable.ts      ← drag logic for windows
+│       │   ├── useWindowManager.ts    ← open/close/focus/move/resize + viewport resize
+│       │   ├── useDraggable.ts        ← drag with viewport clamping
+│       │   └── useViewport.ts         ← live viewport size, useIsMobile()
 │       ├── services/
-│       │   └── aiService.ts      ← calls /query, falls back locally
+│       │   └── aiService.ts           ← 3-tier: RAG backend → OpenAI browser → static fallback
 │       ├── data/
-│       │   └── portfolio.ts      ← projects, skills (edit to customise)
+│       │   └── portfolio.ts           ← projects, skills, experience
 │       └── components/
 │           ├── Taskbar.tsx
-│           ├── DesktopIcons.tsx
+│           ├── DesktopIcons.tsx       ← single-click pixel SVG icons
 │           ├── DesktopBackground.tsx  ← pixel clouds, stars, moon
 │           ├── Statusbar.tsx
+│           ├── MobileView.tsx         ← full scrollable mobile layout with inline AI chat
 │           └── windows/
-│               ├── Window.tsx        ← reusable draggable window shell
+│               ├── Window.tsx         ← reusable draggable/resizable window shell
 │               ├── WelcomeWindow.tsx
 │               ├── AboutWindow.tsx
+│               ├── ExperienceWindow.tsx
 │               ├── ProjectsWindow.tsx
 │               ├── ContactWindow.tsx
-│               └── AIWindow.tsx      ← chat UI with RAG
+│               ├── ResumeWindow.tsx   ← PDF embed + download button
+│               └── AIWindow.tsx       ← chat UI with conversation memory
 │
-└── backend/                      ← FastAPI + FAISS + OpenAI
+└── backend/                           ← FastAPI + FAISS + OpenAI
     ├── main.py
     ├── requirements.txt
-    ├── .env.example
+    ├── .python-version                ← pins Python 3.11.9 for Render
     └── app/
         └── rag/
-            ├── pipeline.py       ← chunk → embed → FAISS → generate
-            └── knowledge_base.py ← Olivia's resume data (edit this!)
+            ├── pipeline.py            ← chunk → embed → FAISS → GPT-4o-mini
+            └── knowledge_base.py      ← resume data as structured chunks
 ```
 
 ---
@@ -56,14 +64,24 @@ portfolio-os/
 ```bash
 cd frontend
 npm install
-cp .env.example .env        # edit VITE_API_URL if needed
-npm run dev                  # → http://localhost:5173
+# create .env
+# optional: set VITE_API_URL to your backend URL
+# optional: set VITE_OPENAI_API_KEY for direct browser AI calls
+npm run dev   # → http://localhost:5173
 ```
 
 Build for production:
+
 ```bash
 npm run build
 ```
+
+### Environment Variables
+
+| Variable | Purpose |
+|---|---|
+| `VITE_API_URL` | FastAPI backend URL (default: `http://localhost:8000`) |
+| `VITE_OPENAI_API_KEY` | OpenAI key for tier 2 browser fallback (optional) |
 
 ---
 
@@ -74,47 +92,75 @@ cd backend
 python3 -m venv venv
 source venv/bin/activate     # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
-cp .env.example .env
-# → edit .env and set OPENAI_API_KEY=sk-...
-
+# create .env and set OPENAI_API_KEY=sk-...
 uvicorn main:app --reload --port 8000
 ```
 
 Endpoints:
-- `GET  /health` — check RAG status
-- `POST /query`  — `{ "question": "..." }` → `{ "answer": "...", "sources": [...] }`
 
-> **Note:** The AI assistant works without the backend — it uses a smart built-in fallback so the portfolio always looks fully functional.
+- `GET  /health` — check RAG pipeline status
+- `POST /query`  — `{ "question": "...", "history": [] }` → `{ "answer": "...", "sources": [...] }`
+
+The backend accepts optional `history` (array of `{role, content}` objects) for conversation-aware responses.
+
+---
+
+## AI Assistant — 3-Tier Fallback
+
+The AI assistant tries each tier in order, falling back silently if one fails:
+
+1. **FastAPI RAG backend** — FAISS vector search over knowledge base chunks, GPT-4o-mini generation with retrieved context and conversation history
+2. **Direct OpenAI browser call** — full knowledge base embedded in system prompt, GPT-4o-mini with conversation history (requires `VITE_OPENAI_API_KEY`)
+3. **Static fallback** — regex-matched topic responses covering all major topics; supports multi-topic questions by combining matched answers
+
+Each response is tagged with a model badge (`gpt-4o-mini (RAG)`, `gpt-4o-mini (browser)`, or `built-in`).
 
 ---
 
 ## Customising Content
 
-**Projects & skills** → `frontend/src/data/portfolio.ts`
+**Projects, skills, experience** → `frontend/src/data/portfolio.ts`
 
 **AI knowledge base** → `backend/app/rag/knowledge_base.py`
-Each document is:
+
+Each document chunk:
+
 ```python
 {
     "id":     "unique_id",
-    "source": "shown as citation in chat",
+    "source": "about_me.txt",   # used internally for retrieval tracking
     "text":   "content that gets embedded and retrieved",
 }
 ```
+
+**Static fallback topics** → `frontend/src/services/aiService.ts` in `staticFallback()`
 
 ---
 
 ## Deployment
 
-**Frontend** → Vercel / Netlify / GitHub Pages (static export)
-```bash
-npm run build   # outputs to dist/
-```
+### Frontend → GitHub Pages
 
-**Backend** → Render
-- Set `OPENAI_API_KEY` environment variable
-- Update `VITE_API_URL` in frontend `.env` to your deployed URL
+Deployed automatically via GitHub Actions on push to `main`. The workflow builds the frontend and pushes to the `gh-pages` branch.
+
+Set these as GitHub Actions secrets in your repo settings:
+
+| Secret | Value |
+|---|---|
+| `VITE_OPENAI_API_KEY` | Your OpenAI API key |
+| `VITE_API_URL` | Your Render backend URL |
+
+`vite.config.ts` sets `base: '/olivia-personal-website/'` for correct asset paths on GitHub Pages.
+
+### Backend → Render
+
+- Root directory: `backend`
+- Build command: `pip install -r requirements.txt`
+- Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- Environment variable: `OPENAI_API_KEY=sk-...`
+- Python version pinned to 3.11.9 via `backend/.python-version`
+
+The backend starts successfully even if the OpenAI embedding call fails on startup (e.g. rate limit) — it sets `rag.ready = False` and the frontend falls back to tier 2/3 gracefully.
 
 ---
 
@@ -122,9 +168,11 @@ npm run build   # outputs to dist/
 
 | Feature | Details |
 |---|---|
-| Window system | Open, close, minimize, drag, resize, z-index stacking |
-| Desktop OS UI | Taskbar with tabs + clock, icons, statusbar |
-| Pixel art aesthetic | SVG pixel clouds, stars, moon, pixel borders, pixel fonts |
-| AI assistant | RAG pipeline (FAISS + OpenAI) with typing animation + source citations |
-| Responsive | Works on desktop; windows scroll on smaller screens |
-| Zero-backend fallback | Smart local answers if API isn't running |
+| Window system | Open, close, minimize, drag, resize, z-index focus stacking |
+| Desktop OS UI | Taskbar with live clock and open window tabs, pixel icons, statusbar |
+| Pixel art aesthetic | SVG pixel icons, clouds, stars, moon, pixel borders, Press Start 2P font |
+| Responsive layout | Full desktop OS on large screens; dedicated scrollable mobile layout below 768px |
+| AI assistant | 3-tier RAG pipeline with conversation memory, model badge, multi-topic fallback |
+| Resume window | PDF embed with download button (`public/resume.pdf`) |
+| Mobile layout | Sticky nav, hero, about/skills/experience/projects/contact/resume/AI chat sections |
+| Zero-backend fallback | Comprehensive static answers always available, no API required |
