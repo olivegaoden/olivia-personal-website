@@ -383,7 +383,7 @@ details[open] {
 /* Touch-friendly hit targets */
 @media (pointer: coarse) {
   .px-btn {
-    min-height: 40px;
+    min-height: 20px;
     min-width: 40px;
   }
   .win-dot {

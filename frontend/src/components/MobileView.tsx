@@ -182,6 +182,9 @@ export const MobileView: React.FC = () => {
 
         {/* HERO */}
         <div className="text-center py-4">
+          <div className="font-pixel text-ink-mid mb-4 px-3 py-2" style={{ fontSize: 6, border: '1px dashed #9b8dd4', background: 'rgba(184,174,232,0.15)', display: 'inline-block' }}>
+            For full experience, view on desktop
+          </div>
           <h1 className="font-pixel text-ink mb-2" style={{ fontSize: 16, lineHeight: 2.2 }}>
             Hi, I'm <span style={{ color: '#e879a0' }}>Olivia Gao</span>
           </h1>
@@ -294,7 +297,7 @@ export const MobileView: React.FC = () => {
         {/* CONTACT */}
         <section id="mobile-contact">
           <SectionHeader>// CONTACT</SectionHeader>
-          <div style={{ background: 'rgba(119,232,160,0.12)', border: '2px solid #77e8a0', boxShadow: '3px 3px 0 #4db87a', padding: '10px 14px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ background: 'rgba(255,255,255,0.85)', border: '2px solid #77e8a0', boxShadow: '3px 3px 0 #4db87a', padding: '10px 14px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
             <div className="pulse-green" style={{ width: 10, height: 10, background: '#77e8a0', border: '1px solid #4db87a', flexShrink: 0 }} />
             <span className="font-pixel text-green-700" style={{ fontSize: 7 }}>OPEN TO OPPORTUNITIES</span>
           </div>
@@ -328,7 +331,7 @@ export const MobileView: React.FC = () => {
                 className="px-btn pink"
                 style={{ textDecoration: 'none', fontSize: 6 }}
               >
-                ⬇ Download
+                ↓ Download
               </a>
             </div>
             {/* PDF embed — tall enough to show full resume on mobile */}
