@@ -354,7 +354,7 @@ export const MobileView: React.FC = () => {
         </section>
 
         <div className="text-center pb-6">
-          <p className="font-mono text-ink-mid" style={{ fontSize: 16 }}>✨ Made with love &amp; pixels by Olivia</p>
+          <p className="font-mono text-ink-mid" style={{ fontSize: 16 }}>✨ Made by Olivia</p>
         </div>
       </div>
     </div>
