@@ -2,16 +2,15 @@
 RAG Pipeline
 ============
 1. Chunk documents
-2. Embed via OpenAI text-embedding-3-small
+2. Embed via OpenAI text-embedding-3-small (cached to disk)
 3. Store in FAISS
 4. At query time: embed → retrieve top-k → generate with gpt-4o-mini
 """
+import json
 import logging
-from typing import Any
 import os
-
-INDEX_PATH  = "faiss.index"
-CHUNKS_PATH = "chunks.npy"
+import hashlib
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +31,18 @@ TOP_K       = 6
 CHUNK_WORDS = 120
 OVERLAP     = 20
 
+# Cache files — stored next to this file
+_DIR        = os.path.dirname(__file__)
+CACHE_INDEX = os.path.join(_DIR, "faiss.index")
+CACHE_META  = os.path.join(_DIR, "chunks.json")
+CACHE_HASH  = os.path.join(_DIR, "kb_hash.txt")
+
+
+def _kb_hash() -> str:
+    """Hash the knowledge base content so we can detect changes."""
+    content = json.dumps([d["text"] for d in DOCUMENTS], sort_keys=True)
+    return hashlib.md5(content.encode()).hexdigest()
+
 
 class RAGPipeline:
     def __init__(self, api_key: str | None = None):
@@ -44,20 +55,32 @@ class RAGPipeline:
         if DEPS_OK and api_key:
             self.client = OpenAI(api_key=api_key)
 
-    # ── Build FAISS index ─────────────────────────────────────────────────
+    # ── Build or load FAISS index ─────────────────────────────────────────
     def build_index(self):
         if not DEPS_OK or not self.client:
             logger.warning("Skipping FAISS build — missing deps or API key")
             return
 
-        if os.path.exists(INDEX_PATH) and os.path.exists(CHUNKS_PATH):
-            logger.info("Loading FAISS index from cache…")
-            self.index  = faiss.read_index(INDEX_PATH)
-            self.chunks = np.load(CHUNKS_PATH, allow_pickle=True).tolist()
-            self.ready  = True
-            logger.info(f"FAISS index loaded — {self.index.ntotal} vectors")
-            return
+        current_hash = _kb_hash()
 
+        # Load from cache if it exists and knowledge base hasn't changed
+        if (
+            os.path.exists(CACHE_INDEX)
+            and os.path.exists(CACHE_META)
+            and os.path.exists(CACHE_HASH)
+            and open(CACHE_HASH).read().strip() == current_hash
+        ):
+            logger.info("Loading FAISS index from cache…")
+            try:
+                self.index  = faiss.read_index(CACHE_INDEX)
+                self.chunks = json.loads(open(CACHE_META).read())
+                self.ready  = True
+                logger.info(f"Loaded {self.index.ntotal} vectors from cache ✓")
+                return
+            except Exception as e:
+                logger.warning(f"Cache load failed ({e}), rebuilding…")
+
+        # Build fresh
         self.chunks = self._chunk_documents(DOCUMENTS)
         texts = [c["text"] for c in self.chunks]
 
@@ -67,12 +90,17 @@ class RAGPipeline:
         dim = len(vectors[0])
         self.index = faiss.IndexFlatL2(dim)
         self.index.add(np.array(vectors, dtype="float32"))
-
-        faiss.write_index(self.index, INDEX_PATH)
-        np.save(CHUNKS_PATH, np.array(self.chunks, dtype=object))
-
         self.ready = True
-        logger.info(f"FAISS index built and cached — {self.index.ntotal} vectors, dim={dim}")
+        logger.info(f"FAISS index built — {self.index.ntotal} vectors, dim={dim}")
+
+        # Save to cache
+        try:
+            faiss.write_index(self.index, CACHE_INDEX)
+            open(CACHE_META, "w").write(json.dumps(self.chunks))
+            open(CACHE_HASH, "w").write(current_hash)
+            logger.info("FAISS index cached to disk ✓")
+        except Exception as e:
+            logger.warning(f"Cache write failed ({e}) — will re-embed next startup")
 
     # ── Query ─────────────────────────────────────────────────────────────
     def query(self, question: str, history: list | None = None) -> dict:
