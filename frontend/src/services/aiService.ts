@@ -10,7 +10,7 @@ export interface ConversationMessage {
   content: string
 }
 
-// ── Try FastAPI backend first, then OpenAI direct, then rich static fallback ──
+// ── Try FastAPI backend ────────────────────────────────────────────────────
 const BACKEND = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
 
 async function tryBackend(question: string, history: ConversationMessage[]): Promise<AIResponse | null> {
