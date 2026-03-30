@@ -28,7 +28,7 @@ olivia-personal-website/
 │       │   ├── useDraggable.ts        ← drag with viewport clamping
 │       │   └── useViewport.ts         ← live viewport size, useIsMobile()
 │       ├── services/
-│       │   └── aiService.ts           ← 3-tier: RAG backend → OpenAI browser → static fallback
+│       │   └── aiService.ts           ← 2-tier: RAG backend → static fallback
 │       ├── data/
 │       │   └── portfolio.ts           ← projects, skills, experience
 │       └── components/
@@ -53,7 +53,7 @@ olivia-personal-website/
     ├── .python-version                ← pins Python 3.11.9 for Render
     └── app/
         └── rag/
-            ├── pipeline.py            ← chunk → embed → FAISS → GPT-4o-mini
+            ├── pipeline.py            ← chunk → embed → FAISS → GPT-4o-mini (disk-cached)
             └── knowledge_base.py      ← resume data as structured chunks
 ```
 
@@ -64,8 +64,7 @@ olivia-personal-website/
 ```bash
 cd frontend
 npm install
-# create .env
-# optional: set VITE_API_URL to your backend URLs
+# optional: create .env and set VITE_API_URL to your backend URL
 npm run dev   # → http://localhost:5173
 ```
 
@@ -79,7 +78,7 @@ npm run build
 
 | Variable | Purpose |
 |---|---|
-| `VITE_API_URL` | FastAPI backend URL (default: `http://localhost:8000`) |s
+| `VITE_API_URL` | FastAPI backend URL (default: `http://localhost:8000`) |
 
 ---
 
@@ -96,10 +95,12 @@ uvicorn main:app --reload --port 8000
 
 Endpoints:
 
-- `GET  /health` — check RAG pipeline status
+- `GET  /health` — check RAG pipeline status (`rag_ready: true/false`)
 - `POST /query`  — `{ "question": "...", "history": [] }` → `{ "answer": "...", "sources": [...] }`
 
 The backend accepts optional `history` (array of `{role, content}` objects) for conversation-aware responses.
+
+The FAISS index is cached to disk on first build so subsequent startups load instantly without calling OpenAI.
 
 ---
 
@@ -107,10 +108,10 @@ The backend accepts optional `history` (array of `{role, content}` objects) for 
 
 The AI assistant tries each tier in order, falling back silently if one fails:
 
-1. **FastAPI RAG backend** — FAISS vector search over knowledge base chunks, GPT-4o-mini generation with retrieved context and conversation historys
-2. **Static fallback** — regex-matched topic responses covering all major topics; supports multi-topic questions by combining matched answers
+1. **FastAPI RAG backend** — FAISS vector search over knowledge base chunks, GPT-4o-mini generation with retrieved context and conversation history
+2. **Static fallback** — regex-matched topic responses covering all major topics; supports multi-topic questions by combining matched answers with section headings
 
-Each response is tagged with a model badge (`gpt-4o-mini (RAG)`, `gpt-4o-mini (browser)`, or `built-in`).
+Each response is tagged with a model badge (`gpt-4o-mini (RAG)` or `built-in`).
 
 ---
 
@@ -125,10 +126,12 @@ Each document chunk:
 ```python
 {
     "id":     "unique_id",
-    "source": "about_me.txt",   # used internally for retrieval tracking
+    "source": "about_me.txt",
     "text":   "content that gets embedded and retrieved",
 }
 ```
+
+Updating the knowledge base automatically invalidates the disk cache — the index will be rebuilt on next startup.
 
 **Static fallback topics** → `frontend/src/services/aiService.ts` in `staticFallback()`
 
@@ -156,7 +159,7 @@ Set these as GitHub Actions secrets in your repo settings:
 - Environment variable: `OPENAI_API_KEY=sk-...`
 - Python version pinned to 3.11.9 via `backend/.python-version`
 
-The backend starts successfully even if the OpenAI embedding call fails on startup (e.g. rate limit) — it sets `rag.ready = False` and the frontend falls back to tier 2/3 gracefully.
+The backend starts successfully even if the OpenAI embedding call fails on startup — it sets `rag.ready = False` and the frontend falls back to the static tier gracefully.
 
 ---
 
@@ -168,7 +171,8 @@ The backend starts successfully even if the OpenAI embedding call fails on start
 | Desktop OS UI | Taskbar with live clock and open window tabs, pixel icons, statusbar |
 | Pixel art aesthetic | SVG pixel icons, clouds, stars, moon, pixel borders, Press Start 2P font |
 | Responsive layout | Full desktop OS on large screens; dedicated scrollable mobile layout below 768px |
-| AI assistant | 3-tier RAG pipeline with conversation memory, model badge, multi-topic fallback |
+| AI assistant | RAG pipeline with conversation memory, model badge, multi-topic static fallback |
 | Resume window | PDF embed with download button (`public/resume.pdf`) |
 | Mobile layout | Sticky nav, hero, about/skills/experience/projects/contact/resume/AI chat sections |
 | Zero-backend fallback | Comprehensive static answers always available, no API required |
+| FAISS index caching | Embeddings cached to disk — cold starts load instantly without OpenAI calls |
