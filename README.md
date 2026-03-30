@@ -65,8 +65,7 @@ olivia-personal-website/
 cd frontend
 npm install
 # create .env
-# optional: set VITE_API_URL to your backend URL
-# optional: set VITE_OPENAI_API_KEY for direct browser AI calls
+# optional: set VITE_API_URL to your backend URLs
 npm run dev   # → http://localhost:5173
 ```
 
@@ -80,8 +79,7 @@ npm run build
 
 | Variable | Purpose |
 |---|---|
-| `VITE_API_URL` | FastAPI backend URL (default: `http://localhost:8000`) |
-| `VITE_OPENAI_API_KEY` | OpenAI key for tier 2 browser fallback (optional) |
+| `VITE_API_URL` | FastAPI backend URL (default: `http://localhost:8000`) |s
 
 ---
 
@@ -105,13 +103,12 @@ The backend accepts optional `history` (array of `{role, content}` objects) for 
 
 ---
 
-## AI Assistant — 3-Tier Fallback
+## AI Assistant — 2-Tier Fallback
 
 The AI assistant tries each tier in order, falling back silently if one fails:
 
-1. **FastAPI RAG backend** — FAISS vector search over knowledge base chunks, GPT-4o-mini generation with retrieved context and conversation history
-2. **Direct OpenAI browser call** — full knowledge base embedded in system prompt, GPT-4o-mini with conversation history (requires `VITE_OPENAI_API_KEY`)
-3. **Static fallback** — regex-matched topic responses covering all major topics; supports multi-topic questions by combining matched answers
+1. **FastAPI RAG backend** — FAISS vector search over knowledge base chunks, GPT-4o-mini generation with retrieved context and conversation historys
+2. **Static fallback** — regex-matched topic responses covering all major topics; supports multi-topic questions by combining matched answers
 
 Each response is tagged with a model badge (`gpt-4o-mini (RAG)`, `gpt-4o-mini (browser)`, or `built-in`).
 
@@ -147,7 +144,6 @@ Set these as GitHub Actions secrets in your repo settings:
 
 | Secret | Value |
 |---|---|
-| `VITE_OPENAI_API_KEY` | Your OpenAI API key |
 | `VITE_API_URL` | Your Render backend URL |
 
 `vite.config.ts` sets `base: '/olivia-personal-website/'` for correct asset paths on GitHub Pages.

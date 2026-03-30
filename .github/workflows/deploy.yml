@@ -21,16 +21,10 @@ jobs:
         working-directory: frontend
         run: npm install
 
-      - name: Check env
-        run: echo "Key starts with ${VITE_OPENAI_API_KEY:0:5}"
-        env:
-          VITE_OPENAI_API_KEY: ${{ secrets.VITE_OPENAI_API_KEY }}
-  
       - name: Build
         working-directory: frontend
         run: npm run build
         env:
-          VITE_OPENAI_API_KEY: ${{ secrets.VITE_OPENAI_API_KEY }}
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
       - name: Deploy
